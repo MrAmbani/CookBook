@@ -1,0 +1,30 @@
+services:
+  # Development services
+  postgres:
+    image: ghcr.io/serverpod/postgres:16
+    ports:
+      - "8090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: cookbook
+      POSTGRES_PASSWORD: "fBZk0Se5NXcNw-Antv_UG88-mIgZkgrn"
+    volumes:
+      - cookbook_data:/var/lib/postgresql/data
+
+
+  # Test services
+  postgres_test:
+    image: ghcr.io/serverpod/postgres:16
+    ports:
+      - "9090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: cookbook_test
+      POSTGRES_PASSWORD: "1lZ-2CY5EP3M1H5sw8TQXATb3weQHHrW"
+    volumes:
+      - cookbook_test_data:/var/lib/postgresql/data
+
+
+volumes:
+  cookbook_data:
+  cookbook_test_data:
