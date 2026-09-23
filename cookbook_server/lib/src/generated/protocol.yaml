@@ -1,3 +1,5 @@
+admin:
+  - setUserRole:
 emailIdp:
   - login:
   - startRegistration:
@@ -9,5 +11,8 @@ emailIdp:
   - hasAccount:
 jwtRefresh:
   - refreshAccessToken:
+profile:
+  - getProfile:
+  - updateProfile:
 greeting:
   - hello:

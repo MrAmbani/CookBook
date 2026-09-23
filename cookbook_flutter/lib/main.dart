@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'client.dart';
+import 'screens/sign_in_screen.dart';
 import 'screens/greetings_screen.dart';
 
 void main() async {
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: _buildTheme(Brightness.light),
       darkTheme: _buildTheme(Brightness.dark),
       themeMode: ThemeMode.system,
-      home: const MyHomePage(title: 'Serverpod Example'),
+      home: SignInScreen(),
     );
   }
 }

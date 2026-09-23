@@ -13,6 +13,7 @@
 import 'dart:async' as _ida;
 import 'package:cookbook_client/src/protocol/greetings/greeting.dart'
     as _ipvxrsk2;
+import 'package:cookbook_client/src/protocol/user_profile.dart' as _itv3alm3;
 import 'package:http/http.dart' as _i85jenna;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
@@ -20,6 +21,27 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _iaic;
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'protocol.dart' as _il2as5qe;
+
+/// {@category Endpoint}
+class EndpointAdmin extends _isc.EndpointRef {
+  EndpointAdmin(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'admin';
+
+  /// Changes another user's role. Caller must already be an admin.
+  _ida.Future<_itv3alm3.UserProfile> setUserRole({
+    required String targetUserId,
+    required String newRole,
+  }) => caller.callServerEndpoint<_itv3alm3.UserProfile>(
+    'admin',
+    'setUserRole',
+    {
+      'targetUserId': targetUserId,
+      'newRole': newRole,
+    },
+  );
+}
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -246,6 +268,37 @@ class EndpointJwtRefresh extends _iacc.EndpointRefreshJwtTokens {
       );
 }
 
+/// {@category Endpoint}
+class EndpointProfile extends _isc.EndpointRef {
+  EndpointProfile(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'profile';
+
+  /// Returns the logged-in user's profile. Creates a default one
+  /// (role: 'user') on first call if none exists yet.
+  _ida.Future<_itv3alm3.UserProfile> getProfile() =>
+      caller.callServerEndpoint<_itv3alm3.UserProfile>(
+        'profile',
+        'getProfile',
+        {},
+      );
+
+  /// Updates the caller's own name and bio only. Role and userId can't
+  /// be changed here — that's intentional.
+  _ida.Future<_itv3alm3.UserProfile> updateProfile({
+    required String name,
+    String? bio,
+  }) => caller.callServerEndpoint<_itv3alm3.UserProfile>(
+    'profile',
+    'updateProfile',
+    {
+      'name': name,
+      'bio': bio,
+    },
+  );
+}
+
 /// This is an example endpoint that returns a greeting message through
 /// its [hello] method.
 /// {@category Endpoint}
@@ -302,15 +355,21 @@ class Client extends _isc.ServerpodClientShared {
              disconnectStreamsOnLostInternetConnection,
          httpClientOverride: httpClientOverride,
        ) {
+    admin = EndpointAdmin(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    profile = EndpointProfile(this);
     greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
 
+  late final EndpointAdmin admin;
+
   late final EndpointEmailIdp emailIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
+
+  late final EndpointProfile profile;
 
   late final EndpointGreeting greeting;
 
@@ -318,8 +377,10 @@ class Client extends _isc.ServerpodClientShared {
 
   @override
   Map<String, _isc.EndpointRef> get endpointRefLookup => {
+    'admin': admin,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'profile': profile,
     'greeting': greeting,
   };
 

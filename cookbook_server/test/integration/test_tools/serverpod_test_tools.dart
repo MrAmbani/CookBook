@@ -15,6 +15,7 @@ import 'dart:async' as _ida;
 import 'dart:io' as _idi;
 import 'package:cookbook_server/src/generated/greetings/greeting.dart'
     as _ist8xn37;
+import 'package:cookbook_server/src/generated/user_profile.dart' as _i4pszz4y;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
@@ -147,9 +148,13 @@ void withServerpod(
 }
 
 class TestEndpoints {
+  late final _AdminEndpoint admin;
+
   late final _EmailIdpEndpoint emailIdp;
 
   late final _JwtRefreshEndpoint jwtRefresh;
+
+  late final _ProfileEndpoint profile;
 
   late final _GreetingEndpoint greeting;
 }
@@ -161,6 +166,10 @@ class _InternalTestEndpoints extends TestEndpoints
     _is.SerializationManager serializationManager,
     _is.EndpointDispatch endpoints,
   ) {
+    admin = _AdminEndpoint(
+      endpoints,
+      serializationManager,
+    );
     emailIdp = _EmailIdpEndpoint(
       endpoints,
       serializationManager,
@@ -169,10 +178,60 @@ class _InternalTestEndpoints extends TestEndpoints
       endpoints,
       serializationManager,
     );
+    profile = _ProfileEndpoint(
+      endpoints,
+      serializationManager,
+    );
     greeting = _GreetingEndpoint(
       endpoints,
       serializationManager,
     );
+  }
+}
+
+class _AdminEndpoint {
+  _AdminEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_i4pszz4y.UserProfile> setUserRole(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String targetUserId,
+    required String newRole,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'admin',
+            method: 'setUserRole',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'admin',
+          methodName: 'setUserRole',
+          parameters: _ist.testObjectToJson({
+            'targetUserId': targetUserId,
+            'newRole': newRole,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i4pszz4y.UserProfile>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
   }
 }
 
@@ -486,6 +545,82 @@ class _JwtRefreshEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<_iacs.AuthSuccess>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _ProfileEndpoint {
+  _ProfileEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_i4pszz4y.UserProfile> getProfile(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'profile',
+            method: 'getProfile',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'profile',
+          methodName: 'getProfile',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i4pszz4y.UserProfile>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i4pszz4y.UserProfile> updateProfile(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String name,
+    String? bio,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'profile',
+            method: 'updateProfile',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'profile',
+          methodName: 'updateProfile',
+          parameters: _ist.testObjectToJson({
+            'name': name,
+            'bio': bio,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i4pszz4y.UserProfile>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

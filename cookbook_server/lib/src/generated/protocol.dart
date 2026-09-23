@@ -18,7 +18,9 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
 import 'greetings/greeting.dart' as _izw8z7ou;
+import 'user_profile.dart' as _ir2mn8w1;
 export 'greetings/greeting.dart';
+export 'user_profile.dart';
 
 class Protocol extends _is.DatabaseSerializationManager {
   Protocol._();
@@ -28,6 +30,60 @@ class Protocol extends _is.DatabaseSerializationManager {
   static final Protocol _instance = Protocol._().._registerHostProtocols();
 
   static List<_isp.TableDefinition> get targetTableDefinitions => [
+    _isp.TableDefinition(
+      name: 'user_profile',
+      dartName: 'UserProfile',
+      schema: 'public',
+      module: 'cookbook',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'userId',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'name',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'bio',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'profileImage',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'role',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [],
+      managed: true,
+    ),
     ..._iais.Protocol.targetTableDefinitions,
     ..._iacs.Protocol.targetTableDefinitions,
     ..._isp.Protocol.targetTableDefinitions,
@@ -63,8 +119,14 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
     }
+    if (t == _ir2mn8w1.UserProfile) {
+      return _ir2mn8w1.UserProfile.fromJson(data) as T;
+    }
     if (t == _is.getType<_izw8z7ou.Greeting?>()) {
       return (data != null ? _izw8z7ou.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_ir2mn8w1.UserProfile?>()) {
+      return (data != null ? _ir2mn8w1.UserProfile.fromJson(data) : null) as T;
     }
     try {
       return _iais.Protocol().deserialize<T>(data, t);
@@ -81,6 +143,7 @@ class Protocol extends _is.DatabaseSerializationManager {
   static String? getClassNameForType(Type type) {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
+      _ir2mn8w1.UserProfile => 'UserProfile',
       _ => null,
     };
   }
@@ -97,6 +160,8 @@ class Protocol extends _is.DatabaseSerializationManager {
     switch (data) {
       case _izw8z7ou.Greeting():
         return 'Greeting';
+      case _ir2mn8w1.UserProfile():
+        return 'UserProfile';
     }
     className = _iais.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -125,6 +190,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);
+    }
+    if (dataClassName == 'UserProfile') {
+      return deserialize<_ir2mn8w1.UserProfile>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
@@ -165,6 +233,10 @@ class Protocol extends _is.DatabaseSerializationManager {
       if (table != null) {
         return table;
       }
+    }
+    switch (t) {
+      case _ir2mn8w1.UserProfile:
+        return _ir2mn8w1.UserProfile.t;
     }
     return null;
   }

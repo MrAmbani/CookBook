@@ -1,0 +1,80 @@
+{
+  "__className__": "serverpod.DatabaseMigration",
+  "actions": [
+    {
+      "__className__": "serverpod.DatabaseMigrationAction",
+      "type": "createTable",
+      "createTable": {
+        "__className__": "serverpod.TableDefinition",
+        "name": "user_profile",
+        "dartName": "UserProfile",
+        "module": "cookbook",
+        "schema": "public",
+        "columns": [
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "id",
+            "fieldName": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "serial",
+            "dartType": "int?"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "userId",
+            "fieldName": "userId",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "name",
+            "fieldName": "name",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "bio",
+            "fieldName": "bio",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "profileImage",
+            "fieldName": "profileImage",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "role",
+            "fieldName": "role",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "__className__": "serverpod.ColumnDefinition",
+            "name": "createdAt",
+            "fieldName": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [],
+  "migrationApiVersion": 1
+}

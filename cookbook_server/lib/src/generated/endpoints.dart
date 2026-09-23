@@ -15,14 +15,22 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
+import '../auth/admin_endpoint.dart' as _i8v010p0;
 import '../auth/email_idp_endpoint.dart' as _iuc1hd5t;
 import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
+import '../auth/profile_endpoint.dart' as _icd61av3;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
   void initializeEndpoints(_is.Server server) {
     var endpoints = <String, _is.Endpoint>{
+      'admin': _i8v010p0.AdminEndpoint()
+        ..initialize(
+          server,
+          'admin',
+          null,
+        ),
       'emailIdp': _iuc1hd5t.EmailIdpEndpoint()
         ..initialize(
           server,
@@ -35,6 +43,12 @@ class Endpoints extends _is.EndpointDispatch {
           'jwtRefresh',
           null,
         ),
+      'profile': _icd61av3.ProfileEndpoint()
+        ..initialize(
+          server,
+          'profile',
+          null,
+        ),
       'greeting': _il624ik7.GreetingEndpoint()
         ..initialize(
           server,
@@ -42,6 +56,37 @@ class Endpoints extends _is.EndpointDispatch {
           null,
         ),
     };
+    connectors['admin'] = _is.EndpointConnector(
+      name: 'admin',
+      endpoint: endpoints['admin']!,
+      methodConnectors: {
+        'setUserRole': _is.MethodConnector(
+          name: 'setUserRole',
+          params: {
+            'targetUserId': _is.ParameterDescription(
+              name: 'targetUserId',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'newRole': _is.ParameterDescription(
+              name: 'newRole',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['admin'] as _i8v010p0.AdminEndpoint).setUserRole(
+                    session,
+                    targetUserId: params['targetUserId'],
+                    newRole: params['newRole'],
+                  ),
+        ),
+      },
+    );
     connectors['emailIdp'] = _is.EndpointConnector(
       name: 'emailIdp',
       endpoint: endpoints['emailIdp']!,
@@ -245,6 +290,47 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         refreshToken: params['refreshToken'],
                       ),
+        ),
+      },
+    );
+    connectors['profile'] = _is.EndpointConnector(
+      name: 'profile',
+      endpoint: endpoints['profile']!,
+      methodConnectors: {
+        'getProfile': _is.MethodConnector(
+          name: 'getProfile',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['profile'] as _icd61av3.ProfileEndpoint)
+                  .getProfile(session),
+        ),
+        'updateProfile': _is.MethodConnector(
+          name: 'updateProfile',
+          params: {
+            'name': _is.ParameterDescription(
+              name: 'name',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'bio': _is.ParameterDescription(
+              name: 'bio',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['profile'] as _icd61av3.ProfileEndpoint)
+                  .updateProfile(
+                    session,
+                    name: params['name'],
+                    bio: params['bio'],
+                  ),
         ),
       },
     );

@@ -1,0 +1,10 @@
+class: UserProfile
+table: user_profile
+
+fields:
+  userId: String
+  name: String
+  bio: String?
+  profileImage: String?
+  role: String
+  createdAt: DateTime
