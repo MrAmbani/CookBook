@@ -28,5 +28,5 @@ Future<void> initializeClient() async {
   client = Client(await serverUrl)
     ..connectivityMonitor = FlutterConnectivityMonitor()
     ..authSessionManager = FlutterAuthSessionManager();
-  unawaited(client.auth.initialize());
+  await client.auth.initialize();
 }
