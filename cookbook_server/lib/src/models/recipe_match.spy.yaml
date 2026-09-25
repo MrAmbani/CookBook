@@ -1,0 +1,6 @@
+class: RecipeMatch
+
+fields:
+  recipe: Recipe
+  score: double
+  missingIngredients: List<String>

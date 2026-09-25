@@ -20,6 +20,7 @@ import '../auth/email_idp_endpoint.dart' as _iuc1hd5t;
 import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
 import '../auth/profile_endpoint.dart' as _icd61av3;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
+import '../recipies/recipe_endpoint.dart' as _i08c4iss;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -53,6 +54,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'greeting',
+          null,
+        ),
+      'recipe': _i08c4iss.RecipeEndpoint()
+        ..initialize(
+          server,
+          'recipe',
           null,
         ),
     };
@@ -355,6 +362,31 @@ class Endpoints extends _is.EndpointDispatch {
                   (endpoints['greeting'] as _il624ik7.GreetingEndpoint).hello(
                     session,
                     params['name'],
+                  ),
+        ),
+      },
+    );
+    connectors['recipe'] = _is.EndpointConnector(
+      name: 'recipe',
+      endpoint: endpoints['recipe']!,
+      methodConnectors: {
+        'recommend': _is.MethodConnector(
+          name: 'recommend',
+          params: {
+            'haveIngredients': _is.ParameterDescription(
+              name: 'haveIngredients',
+              type: _is.getType<List<String>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['recipe'] as _i08c4iss.RecipeEndpoint).recommend(
+                    session,
+                    params['haveIngredients'],
                   ),
         ),
       },

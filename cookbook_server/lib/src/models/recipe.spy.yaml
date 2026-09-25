@@ -1,0 +1,13 @@
+class: Recipe
+table: recipe
+
+fields:
+  title: String
+  description: String
+  instructions: String
+  prepTime: int
+  cookTime: int
+  servings: int
+  difficulty: String
+  creatorId: String?
+  isAiGenerated: bool

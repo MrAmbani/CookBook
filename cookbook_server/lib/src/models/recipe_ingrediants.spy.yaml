@@ -1,0 +1,9 @@
+class: RecipeIngredient
+table: recipe_ingredient
+
+fields:
+  recipeId: int
+  ingredientId: int
+  quantity: String
+  unit: String?
+  isOptional: bool

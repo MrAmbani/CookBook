@@ -15,6 +15,7 @@ import 'dart:async' as _ida;
 import 'dart:io' as _idi;
 import 'package:cookbook_server/src/generated/greetings/greeting.dart'
     as _ist8xn37;
+import 'package:cookbook_server/src/generated/recipe_match.dart' as _i1aylshw;
 import 'package:cookbook_server/src/generated/user_profile.dart' as _i4pszz4y;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
@@ -157,6 +158,8 @@ class TestEndpoints {
   late final _ProfileEndpoint profile;
 
   late final _GreetingEndpoint greeting;
+
+  late final _RecipeEndpoint recipe;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -183,6 +186,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     greeting = _GreetingEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    recipe = _RecipeEndpoint(
       endpoints,
       serializationManager,
     );
@@ -663,6 +670,50 @@ class _GreetingEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<_ist8xn37.Greeting>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _RecipeEndpoint {
+  _RecipeEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<List<_i1aylshw.RecipeMatch>> recommend(
+    _ist.TestSessionBuilder sessionBuilder,
+    List<String> haveIngredients,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'recipe',
+            method: 'recommend',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'recipe',
+          methodName: 'recommend',
+          parameters: _ist.testObjectToJson({
+            'haveIngredients': haveIngredients,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_i1aylshw.RecipeMatch>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

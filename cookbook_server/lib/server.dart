@@ -1,9 +1,8 @@
 import 'dart:io';
-
 import 'package:serverpod_auth_idp_server/core.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
 import 'package:serverpod_cloud_storage/serverpod_cloud_storage.dart';
-
+import 'src/seed/seed_data.dart';
 import 'src/cache_busting.dart';
 import 'src/generated/serverpod.dart';
 import 'src/web/routes/app_config_route.dart';
@@ -101,5 +100,15 @@ void run(List<String> args) async {
   );
 
   // Start the server.
+    // Start the server.
   await pod.start();
+
+  // Seed the database with initial ingredients and recipes if empty.
+  final session = await pod.createSession();
+  try {
+    await seedIfEmpty(session);
+  } finally {
+    await session.close();
+  }
 }
+

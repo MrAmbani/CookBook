@@ -13,6 +13,7 @@
 import 'dart:async' as _ida;
 import 'package:cookbook_client/src/protocol/greetings/greeting.dart'
     as _ipvxrsk2;
+import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
 import 'package:cookbook_client/src/protocol/user_profile.dart' as _itv3alm3;
 import 'package:http/http.dart' as _i85jenna;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
@@ -317,6 +318,24 @@ class EndpointGreeting extends _isc.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointRecipe extends _isc.EndpointRef {
+  EndpointRecipe(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'recipe';
+
+  /// Returns recipes ranked by how many of [haveIngredients] (canonical
+  /// ingredient names) they need, best match first.
+  _ida.Future<List<_ix9qtf7i.RecipeMatch>> recommend(
+    List<String> haveIngredients,
+  ) => caller.callServerEndpoint<List<_ix9qtf7i.RecipeMatch>>(
+    'recipe',
+    'recommend',
+    {'haveIngredients': haveIngredients},
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _iaic.Caller(client);
@@ -360,6 +379,7 @@ class Client extends _isc.ServerpodClientShared {
     jwtRefresh = EndpointJwtRefresh(this);
     profile = EndpointProfile(this);
     greeting = EndpointGreeting(this);
+    recipe = EndpointRecipe(this);
     modules = Modules(this);
   }
 
@@ -373,6 +393,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointGreeting greeting;
 
+  late final EndpointRecipe recipe;
+
   late final Modules modules;
 
   @override
@@ -382,6 +404,7 @@ class Client extends _isc.ServerpodClientShared {
     'jwtRefresh': jwtRefresh,
     'profile': profile,
     'greeting': greeting,
+    'recipe': recipe,
   };
 
   @override
