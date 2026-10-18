@@ -13,6 +13,8 @@
 import 'dart:async' as _ida;
 import 'package:cookbook_client/src/protocol/greetings/greeting.dart'
     as _ipvxrsk2;
+import 'package:cookbook_client/src/protocol/normalized_ingredients.dart'
+    as _iqjhkawc;
 import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
 import 'package:cookbook_client/src/protocol/user_profile.dart' as _itv3alm3;
 import 'package:http/http.dart' as _i85jenna;
@@ -319,6 +321,24 @@ class EndpointGreeting extends _isc.EndpointRef {
 }
 
 /// {@category Endpoint}
+class EndpointIngredient extends _isc.EndpointRef {
+  EndpointIngredient(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'ingredient';
+
+  /// Maps free-typed ingredient names to canonical names using the
+  /// Ingredient table's name + synonyms fields. Case-insensitive.
+  _ida.Future<_iqjhkawc.NormalizedIngredients> normalize(
+    List<String> rawInputs,
+  ) => caller.callServerEndpoint<_iqjhkawc.NormalizedIngredients>(
+    'ingredient',
+    'normalize',
+    {'rawInputs': rawInputs},
+  );
+}
+
+/// {@category Endpoint}
 class EndpointRecipe extends _isc.EndpointRef {
   EndpointRecipe(_isc.EndpointCaller caller) : super(caller);
 
@@ -379,6 +399,7 @@ class Client extends _isc.ServerpodClientShared {
     jwtRefresh = EndpointJwtRefresh(this);
     profile = EndpointProfile(this);
     greeting = EndpointGreeting(this);
+    ingredient = EndpointIngredient(this);
     recipe = EndpointRecipe(this);
     modules = Modules(this);
   }
@@ -393,6 +414,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointGreeting greeting;
 
+  late final EndpointIngredient ingredient;
+
   late final EndpointRecipe recipe;
 
   late final Modules modules;
@@ -404,6 +427,7 @@ class Client extends _isc.ServerpodClientShared {
     'jwtRefresh': jwtRefresh,
     'profile': profile,
     'greeting': greeting,
+    'ingredient': ingredient,
     'recipe': recipe,
   };
 

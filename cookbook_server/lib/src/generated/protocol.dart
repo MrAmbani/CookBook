@@ -20,12 +20,14 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'ingrediants.dart' as _i9otnek0;
+import 'normalized_ingredients.dart' as _imncc5ah;
 import 'recipe.dart' as _ixmlxsuh;
 import 'recipe_ingrediants.dart' as _i2urvore;
 import 'recipe_match.dart' as _ijym6e17;
 import 'user_profile.dart' as _ir2mn8w1;
 export 'greetings/greeting.dart';
 export 'ingrediants.dart';
+export 'normalized_ingredients.dart';
 export 'recipe.dart';
 export 'recipe_ingrediants.dart';
 export 'recipe_match.dart';
@@ -287,6 +289,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _i9otnek0.Ingredient) {
       return _i9otnek0.Ingredient.fromJson(data) as T;
     }
+    if (t == _imncc5ah.NormalizedIngredients) {
+      return _imncc5ah.NormalizedIngredients.fromJson(data) as T;
+    }
     if (t == _ixmlxsuh.Recipe) {
       return _ixmlxsuh.Recipe.fromJson(data) as T;
     }
@@ -305,6 +310,12 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _is.getType<_i9otnek0.Ingredient?>()) {
       return (data != null ? _i9otnek0.Ingredient.fromJson(data) : null) as T;
     }
+    if (t == _is.getType<_imncc5ah.NormalizedIngredients?>()) {
+      return (data != null
+              ? _imncc5ah.NormalizedIngredients.fromJson(data)
+              : null)
+          as T;
+    }
     if (t == _is.getType<_ixmlxsuh.Recipe?>()) {
       return (data != null ? _ixmlxsuh.Recipe.fromJson(data) : null) as T;
     }
@@ -321,14 +332,14 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
+    if (t == List<String>) {
+      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
+    }
     if (t == List<_i1aylshw.RecipeMatch>) {
       return (data as List)
               .map((e) => deserialize<_i1aylshw.RecipeMatch>(e))
               .toList()
           as T;
-    }
-    if (t == List<String>) {
-      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
     try {
       return _iais.Protocol().deserialize<T>(data, t);
@@ -346,6 +357,7 @@ class Protocol extends _is.DatabaseSerializationManager {
     return switch (type) {
       _izw8z7ou.Greeting => 'Greeting',
       _i9otnek0.Ingredient => 'Ingredient',
+      _imncc5ah.NormalizedIngredients => 'NormalizedIngredients',
       _ixmlxsuh.Recipe => 'Recipe',
       _i2urvore.RecipeIngredient => 'RecipeIngredient',
       _ijym6e17.RecipeMatch => 'RecipeMatch',
@@ -368,6 +380,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'Greeting';
       case _i9otnek0.Ingredient():
         return 'Ingredient';
+      case _imncc5ah.NormalizedIngredients():
+        return 'NormalizedIngredients';
       case _ixmlxsuh.Recipe():
         return 'Recipe';
       case _i2urvore.RecipeIngredient():
@@ -407,6 +421,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'Ingredient') {
       return deserialize<_i9otnek0.Ingredient>(data['data']);
+    }
+    if (dataClassName == 'NormalizedIngredients') {
+      return deserialize<_imncc5ah.NormalizedIngredients>(data['data']);
     }
     if (dataClassName == 'Recipe') {
       return deserialize<_ixmlxsuh.Recipe>(data['data']);

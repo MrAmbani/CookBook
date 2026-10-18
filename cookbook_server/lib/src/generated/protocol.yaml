@@ -16,5 +16,7 @@ profile:
   - updateProfile:
 greeting:
   - hello:
+ingredient:
+  - normalize:
 recipe:
   - recommend:

@@ -20,6 +20,7 @@ import '../auth/email_idp_endpoint.dart' as _iuc1hd5t;
 import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
 import '../auth/profile_endpoint.dart' as _icd61av3;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
+import '../recipies/ingredient_endpoint.dart' as _ibftvyt1;
 import '../recipies/recipe_endpoint.dart' as _i08c4iss;
 
 class Endpoints extends _is.EndpointDispatch {
@@ -54,6 +55,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'greeting',
+          null,
+        ),
+      'ingredient': _ibftvyt1.IngredientEndpoint()
+        ..initialize(
+          server,
+          'ingredient',
           null,
         ),
       'recipe': _i08c4iss.RecipeEndpoint()
@@ -363,6 +370,32 @@ class Endpoints extends _is.EndpointDispatch {
                     session,
                     params['name'],
                   ),
+        ),
+      },
+    );
+    connectors['ingredient'] = _is.EndpointConnector(
+      name: 'ingredient',
+      endpoint: endpoints['ingredient']!,
+      methodConnectors: {
+        'normalize': _is.MethodConnector(
+          name: 'normalize',
+          params: {
+            'rawInputs': _is.ParameterDescription(
+              name: 'rawInputs',
+              type: _is.getType<List<String>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['ingredient'] as _ibftvyt1.IngredientEndpoint)
+                      .normalize(
+                        session,
+                        params['rawInputs'],
+                      ),
         ),
       },
     );

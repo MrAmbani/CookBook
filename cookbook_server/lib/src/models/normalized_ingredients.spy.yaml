@@ -1,0 +1,5 @@
+class: NormalizedIngredients
+
+fields:
+  recognized: List<String>
+  unrecognized: List<String>

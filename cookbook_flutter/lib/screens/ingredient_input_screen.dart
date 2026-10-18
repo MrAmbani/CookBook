@@ -11,23 +11,45 @@ class IngredientInputScreen extends StatefulWidget {
 
 class _IngredientInputScreenState extends State<IngredientInputScreen> {
   final _textController = TextEditingController();
-  final List<String> _ingredients = [];
+  final List<String> _recognized = [];
+  final List<String> _unrecognized = [];
 
-  void _addIngredient() {
-    final text = _textController.text.trim().toLowerCase();
+  Future<void> _addIngredient() async {
+    final text = _textController.text.trim();
     if (text.isEmpty) return;
-    if (!_ingredients.contains(text)) {
-      setState(() => _ingredients.add(text));
-    }
     _textController.clear();
+
+    final result = await client.ingredient.normalize([text]);
+
+    setState(() {
+      for (final name in result.recognized) {
+        if (!_recognized.contains(name)) _recognized.add(name);
+      }
+      for (final name in result.unrecognized) {
+        if (!_unrecognized.contains(name)) _unrecognized.add(name);
+      }
+    });
   }
 
-  void _removeIngredient(String ingredient) {
-    setState(() => _ingredients.remove(ingredient));
+  void _removeRecognized(String name) {
+    setState(() => _recognized.remove(name));
+  }
+
+  void _removeUnrecognized(String name) {
+    setState(() => _unrecognized.remove(name));
+  }
+
+  /// User can choose to keep an unrecognized item anyway (SRS: keep or
+  /// remove) — it just won't match any recipe ingredient.
+  void _keepUnrecognizedAnyway(String name) {
+    setState(() {
+      _unrecognized.remove(name);
+      if (!_recognized.contains(name)) _recognized.add(name);
+    });
   }
 
   Future<void> _findRecipes() async {
-    final results = await client.recipe.recommend(_ingredients);
+    final results = await client.recipe.recommend(_recognized);
     if (!mounted) return;
     Navigator.push(
       context,
@@ -61,18 +83,48 @@ class _IngredientInputScreenState extends State<IngredientInputScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            Wrap(
-              spacing: 8,
-              children: _ingredients
-                  .map((i) => Chip(
-                        label: Text(i),
-                        onDeleted: () => _removeIngredient(i),
-                      ))
-                  .toList(),
-            ),
+            if (_recognized.isNotEmpty) ...[
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Recognized', style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+              Wrap(
+                spacing: 8,
+                children: _recognized
+                    .map((i) => Chip(
+                          label: Text(i),
+                          onDeleted: () => _removeRecognized(i),
+                        ))
+                    .toList(),
+              ),
+              const SizedBox(height: 12),
+            ],
+            if (_unrecognized.isNotEmpty) ...[
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Not recognized — tap to keep anyway",
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                ),
+              ),
+              Wrap(
+                spacing: 8,
+                children: _unrecognized
+                    .map((i) => ActionChip(
+                          label: Text(i),
+                          backgroundColor: Colors.orange.shade100,
+                          onPressed: () => _keepUnrecognizedAnyway(i),
+                          avatar: GestureDetector(
+                            onTap: () => _removeUnrecognized(i),
+                            child: const Icon(Icons.close, size: 16),
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ],
             const Spacer(),
             ElevatedButton(
-              onPressed: _ingredients.isEmpty ? null : _findRecipes,
+              onPressed: _recognized.isEmpty ? null : _findRecipes,
               child: const Text('Find Recipes'),
             ),
           ],
