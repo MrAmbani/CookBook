@@ -17,6 +17,8 @@ import 'package:cookbook_server/src/generated/greetings/greeting.dart'
     as _ist8xn37;
 import 'package:cookbook_server/src/generated/normalized_ingredients.dart'
     as _iowvcxju;
+import 'package:cookbook_server/src/generated/recipe.dart' as _iiy2wcna;
+import 'package:cookbook_server/src/generated/recipe_details.dart' as _isk4v94r;
 import 'package:cookbook_server/src/generated/recipe_match.dart' as _i1aylshw;
 import 'package:cookbook_server/src/generated/user_profile.dart' as _i4pszz4y;
 import 'package:serverpod/serverpod.dart' as _is;
@@ -164,6 +166,8 @@ class TestEndpoints {
   late final _IngredientEndpoint ingredient;
 
   late final _RecipeEndpoint recipe;
+
+  late final _SavedRecipeEndpoint savedRecipe;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -198,6 +202,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     recipe = _RecipeEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    savedRecipe = _SavedRecipeEndpoint(
       endpoints,
       serializationManager,
     );
@@ -764,6 +772,171 @@ class _RecipeEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<List<_i1aylshw.RecipeMatch>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_isk4v94r.RecipeDetails> getDetails(
+    _ist.TestSessionBuilder sessionBuilder,
+    int recipeId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'recipe',
+            method: 'getDetails',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'recipe',
+          methodName: 'getDetails',
+          parameters: _ist.testObjectToJson({'recipeId': recipeId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_isk4v94r.RecipeDetails>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _SavedRecipeEndpoint {
+  _SavedRecipeEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<void> save(
+    _ist.TestSessionBuilder sessionBuilder,
+    int recipeId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'savedRecipe',
+            method: 'save',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'savedRecipe',
+          methodName: 'save',
+          parameters: _ist.testObjectToJson({'recipeId': recipeId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<void> unsave(
+    _ist.TestSessionBuilder sessionBuilder,
+    int recipeId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'savedRecipe',
+            method: 'unsave',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'savedRecipe',
+          methodName: 'unsave',
+          parameters: _ist.testObjectToJson({'recipeId': recipeId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_iiy2wcna.Recipe>> getSaved(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'savedRecipe',
+            method: 'getSaved',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'savedRecipe',
+          methodName: 'getSaved',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_iiy2wcna.Recipe>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<bool> isSaved(
+    _ist.TestSessionBuilder sessionBuilder,
+    int recipeId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'savedRecipe',
+            method: 'isSaved',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'savedRecipe',
+          methodName: 'isSaved',
+          parameters: _ist.testObjectToJson({'recipeId': recipeId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<bool>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

@@ -23,7 +23,7 @@ class RecipeEndpoint extends Endpoint {
       final links = allLinks.where((l) => l.recipeId == recipe.id).toList();
       final requiredLinks = links.where((l) => !l.isOptional).toList();
 
-      if (requiredLinks.isEmpty) continue; // skip malformed recipes
+      if (requiredLinks.isEmpty) continue;
 
       final matched = requiredLinks.where((l) {
         final name = ingredientNameById[l.ingredientId];
@@ -54,5 +54,29 @@ class RecipeEndpoint extends Endpoint {
     });
 
     return results;
+  }
+
+  /// Returns full details (ingredients with quantities) for one recipe.
+  Future<RecipeDetails> getDetails(Session session, int recipeId) async {
+    final recipe = await Recipe.db.findById(session, recipeId);
+    if (recipe == null) throw Exception('Recipe not found');
+
+    final links = await RecipeIngredient.db.find(
+      session,
+      where: (t) => t.recipeId.equals(recipeId),
+    );
+    final allIngredients = await Ingredient.db.find(session);
+    final nameById = {for (final i in allIngredients) i.id!: i.name};
+
+    final details = links
+        .map((l) => RecipeIngredientDetail(
+              ingredientName: nameById[l.ingredientId] ?? 'unknown',
+              quantity: l.quantity,
+              unit: l.unit,
+              isOptional: l.isOptional,
+            ))
+        .toList();
+
+    return RecipeDetails(recipe: recipe, ingredients: details);
   }
 }

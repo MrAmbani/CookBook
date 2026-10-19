@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cookbook_client/cookbook_client.dart';
+import 'recipe_details_screen.dart';
 
 class RecipeResultsScreen extends StatelessWidget {
   final List<RecipeMatch> results;
@@ -18,25 +19,33 @@ class RecipeResultsScreen extends StatelessWidget {
                 final percent = (match.score * 100).round();
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          match.recipe.title,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 4),
-                        Text('$percent% match · ${match.recipe.prepTime + match.recipe.cookTime} min · ${match.recipe.difficulty}'),
-                        if (match.missingIngredients.isNotEmpty) ...[
-                          const SizedBox(height: 4),
+                  child: InkWell(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => RecipeDetailsScreen(recipeId: match.recipe.id!),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            'Missing: ${match.missingIngredients.join(", ")}',
-                            style: const TextStyle(color: Colors.orange),
+                            match.recipe.title,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
+                          const SizedBox(height: 4),
+                          Text('$percent% match · ${match.recipe.prepTime + match.recipe.cookTime} min · ${match.recipe.difficulty}'),
+                          if (match.missingIngredients.isNotEmpty) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              'Missing: ${match.missingIngredients.join(", ")}',
+                              style: const TextStyle(color: Colors.orange),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
                 );

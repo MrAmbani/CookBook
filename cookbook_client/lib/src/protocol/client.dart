@@ -15,6 +15,8 @@ import 'package:cookbook_client/src/protocol/greetings/greeting.dart'
     as _ipvxrsk2;
 import 'package:cookbook_client/src/protocol/normalized_ingredients.dart'
     as _iqjhkawc;
+import 'package:cookbook_client/src/protocol/recipe.dart' as _ipe9xyte;
+import 'package:cookbook_client/src/protocol/recipe_details.dart' as _ircsygfi;
 import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
 import 'package:cookbook_client/src/protocol/user_profile.dart' as _itv3alm3;
 import 'package:http/http.dart' as _i85jenna;
@@ -354,6 +356,47 @@ class EndpointRecipe extends _isc.EndpointRef {
     'recommend',
     {'haveIngredients': haveIngredients},
   );
+
+  /// Returns full details (ingredients with quantities) for one recipe.
+  _ida.Future<_ircsygfi.RecipeDetails> getDetails(int recipeId) =>
+      caller.callServerEndpoint<_ircsygfi.RecipeDetails>(
+        'recipe',
+        'getDetails',
+        {'recipeId': recipeId},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointSavedRecipe extends _isc.EndpointRef {
+  EndpointSavedRecipe(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'savedRecipe';
+
+  _ida.Future<void> save(int recipeId) => caller.callServerEndpoint<void>(
+    'savedRecipe',
+    'save',
+    {'recipeId': recipeId},
+  );
+
+  _ida.Future<void> unsave(int recipeId) => caller.callServerEndpoint<void>(
+    'savedRecipe',
+    'unsave',
+    {'recipeId': recipeId},
+  );
+
+  _ida.Future<List<_ipe9xyte.Recipe>> getSaved() =>
+      caller.callServerEndpoint<List<_ipe9xyte.Recipe>>(
+        'savedRecipe',
+        'getSaved',
+        {},
+      );
+
+  _ida.Future<bool> isSaved(int recipeId) => caller.callServerEndpoint<bool>(
+    'savedRecipe',
+    'isSaved',
+    {'recipeId': recipeId},
+  );
 }
 
 class Modules {
@@ -401,6 +444,7 @@ class Client extends _isc.ServerpodClientShared {
     greeting = EndpointGreeting(this);
     ingredient = EndpointIngredient(this);
     recipe = EndpointRecipe(this);
+    savedRecipe = EndpointSavedRecipe(this);
     modules = Modules(this);
   }
 
@@ -418,6 +462,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointRecipe recipe;
 
+  late final EndpointSavedRecipe savedRecipe;
+
   late final Modules modules;
 
   @override
@@ -429,6 +475,7 @@ class Client extends _isc.ServerpodClientShared {
     'greeting': greeting,
     'ingredient': ingredient,
     'recipe': recipe,
+    'savedRecipe': savedRecipe,
   };
 
   @override

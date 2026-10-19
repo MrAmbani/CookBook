@@ -22,6 +22,7 @@ import '../auth/profile_endpoint.dart' as _icd61av3;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
 import '../recipies/ingredient_endpoint.dart' as _ibftvyt1;
 import '../recipies/recipe_endpoint.dart' as _i08c4iss;
+import '../recipies/saved_recipe_endpoint.dart' as _iknj3c3y;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -67,6 +68,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'recipe',
+          null,
+        ),
+      'savedRecipe': _iknj3c3y.SavedRecipeEndpoint()
+        ..initialize(
+          server,
+          'savedRecipe',
           null,
         ),
     };
@@ -421,6 +428,102 @@ class Endpoints extends _is.EndpointDispatch {
                     session,
                     params['haveIngredients'],
                   ),
+        ),
+        'getDetails': _is.MethodConnector(
+          name: 'getDetails',
+          params: {
+            'recipeId': _is.ParameterDescription(
+              name: 'recipeId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['recipe'] as _i08c4iss.RecipeEndpoint).getDetails(
+                    session,
+                    params['recipeId'],
+                  ),
+        ),
+      },
+    );
+    connectors['savedRecipe'] = _is.EndpointConnector(
+      name: 'savedRecipe',
+      endpoint: endpoints['savedRecipe']!,
+      methodConnectors: {
+        'save': _is.MethodConnector(
+          name: 'save',
+          params: {
+            'recipeId': _is.ParameterDescription(
+              name: 'recipeId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['savedRecipe'] as _iknj3c3y.SavedRecipeEndpoint)
+                      .save(
+                        session,
+                        params['recipeId'],
+                      ),
+        ),
+        'unsave': _is.MethodConnector(
+          name: 'unsave',
+          params: {
+            'recipeId': _is.ParameterDescription(
+              name: 'recipeId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['savedRecipe'] as _iknj3c3y.SavedRecipeEndpoint)
+                      .unsave(
+                        session,
+                        params['recipeId'],
+                      ),
+        ),
+        'getSaved': _is.MethodConnector(
+          name: 'getSaved',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['savedRecipe'] as _iknj3c3y.SavedRecipeEndpoint)
+                      .getSaved(session),
+        ),
+        'isSaved': _is.MethodConnector(
+          name: 'isSaved',
+          params: {
+            'recipeId': _is.ParameterDescription(
+              name: 'recipeId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['savedRecipe'] as _iknj3c3y.SavedRecipeEndpoint)
+                      .isSaved(
+                        session,
+                        params['recipeId'],
+                      ),
         ),
       },
     );

@@ -20,3 +20,9 @@ ingredient:
   - normalize:
 recipe:
   - recommend:
+  - getDetails:
+savedRecipe:
+  - save:
+  - unsave:
+  - getSaved:
+  - isSaved:

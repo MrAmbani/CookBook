@@ -11,6 +11,7 @@
 // ignore_for_file: dead_code, unnecessary_type_check
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:cookbook_client/src/protocol/recipe.dart' as _ipe9xyte;
 import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
@@ -21,15 +22,21 @@ import 'greetings/greeting.dart' as _izw8z7ou;
 import 'ingrediants.dart' as _i9otnek0;
 import 'normalized_ingredients.dart' as _imncc5ah;
 import 'recipe.dart' as _ixmlxsuh;
+import 'recipe_details.dart' as _isbyitoy;
 import 'recipe_ingrediants.dart' as _i2urvore;
+import 'recipe_ingredient_details.dart' as _inpog33j;
 import 'recipe_match.dart' as _ijym6e17;
+import 'saved_recipe.dart' as _igrf4bz7;
 import 'user_profile.dart' as _ir2mn8w1;
 export 'greetings/greeting.dart';
 export 'ingrediants.dart';
 export 'normalized_ingredients.dart';
 export 'recipe.dart';
+export 'recipe_details.dart';
 export 'recipe_ingrediants.dart';
+export 'recipe_ingredient_details.dart';
 export 'recipe_match.dart';
+export 'saved_recipe.dart';
 export 'user_profile.dart';
 export 'client.dart';
 
@@ -79,11 +86,20 @@ class Protocol extends _isc.SerializationManager {
     if (t == _ixmlxsuh.Recipe) {
       return _ixmlxsuh.Recipe.fromJson(data) as T;
     }
+    if (t == _isbyitoy.RecipeDetails) {
+      return _isbyitoy.RecipeDetails.fromJson(data) as T;
+    }
     if (t == _i2urvore.RecipeIngredient) {
       return _i2urvore.RecipeIngredient.fromJson(data) as T;
     }
+    if (t == _inpog33j.RecipeIngredientDetail) {
+      return _inpog33j.RecipeIngredientDetail.fromJson(data) as T;
+    }
     if (t == _ijym6e17.RecipeMatch) {
       return _ijym6e17.RecipeMatch.fromJson(data) as T;
+    }
+    if (t == _igrf4bz7.SavedRecipe) {
+      return _igrf4bz7.SavedRecipe.fromJson(data) as T;
     }
     if (t == _ir2mn8w1.UserProfile) {
       return _ir2mn8w1.UserProfile.fromJson(data) as T;
@@ -103,12 +119,25 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_ixmlxsuh.Recipe?>()) {
       return (data != null ? _ixmlxsuh.Recipe.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_isbyitoy.RecipeDetails?>()) {
+      return (data != null ? _isbyitoy.RecipeDetails.fromJson(data) : null)
+          as T;
+    }
     if (t == _isc.getType<_i2urvore.RecipeIngredient?>()) {
       return (data != null ? _i2urvore.RecipeIngredient.fromJson(data) : null)
           as T;
     }
+    if (t == _isc.getType<_inpog33j.RecipeIngredientDetail?>()) {
+      return (data != null
+              ? _inpog33j.RecipeIngredientDetail.fromJson(data)
+              : null)
+          as T;
+    }
     if (t == _isc.getType<_ijym6e17.RecipeMatch?>()) {
       return (data != null ? _ijym6e17.RecipeMatch.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_igrf4bz7.SavedRecipe?>()) {
+      return (data != null ? _igrf4bz7.SavedRecipe.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_ir2mn8w1.UserProfile?>()) {
       return (data != null ? _ir2mn8w1.UserProfile.fromJson(data) : null) as T;
@@ -116,12 +145,24 @@ class Protocol extends _isc.SerializationManager {
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
+    if (t == List<_inpog33j.RecipeIngredientDetail>) {
+      return (data as List)
+              .map((e) => deserialize<_inpog33j.RecipeIngredientDetail>(e))
+              .toList()
+          as T;
+    }
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
     if (t == List<_ix9qtf7i.RecipeMatch>) {
       return (data as List)
               .map((e) => deserialize<_ix9qtf7i.RecipeMatch>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ipe9xyte.Recipe>) {
+      return (data as List)
+              .map((e) => deserialize<_ipe9xyte.Recipe>(e))
               .toList()
           as T;
     }
@@ -140,8 +181,11 @@ class Protocol extends _isc.SerializationManager {
       _i9otnek0.Ingredient => 'Ingredient',
       _imncc5ah.NormalizedIngredients => 'NormalizedIngredients',
       _ixmlxsuh.Recipe => 'Recipe',
+      _isbyitoy.RecipeDetails => 'RecipeDetails',
       _i2urvore.RecipeIngredient => 'RecipeIngredient',
+      _inpog33j.RecipeIngredientDetail => 'RecipeIngredientDetail',
       _ijym6e17.RecipeMatch => 'RecipeMatch',
+      _igrf4bz7.SavedRecipe => 'SavedRecipe',
       _ir2mn8w1.UserProfile => 'UserProfile',
       _ => null,
     };
@@ -165,10 +209,16 @@ class Protocol extends _isc.SerializationManager {
         return 'NormalizedIngredients';
       case _ixmlxsuh.Recipe():
         return 'Recipe';
+      case _isbyitoy.RecipeDetails():
+        return 'RecipeDetails';
       case _i2urvore.RecipeIngredient():
         return 'RecipeIngredient';
+      case _inpog33j.RecipeIngredientDetail():
+        return 'RecipeIngredientDetail';
       case _ijym6e17.RecipeMatch():
         return 'RecipeMatch';
+      case _igrf4bz7.SavedRecipe():
+        return 'SavedRecipe';
       case _ir2mn8w1.UserProfile():
         return 'UserProfile';
     }
@@ -205,11 +255,20 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'Recipe') {
       return deserialize<_ixmlxsuh.Recipe>(data['data']);
     }
+    if (dataClassName == 'RecipeDetails') {
+      return deserialize<_isbyitoy.RecipeDetails>(data['data']);
+    }
     if (dataClassName == 'RecipeIngredient') {
       return deserialize<_i2urvore.RecipeIngredient>(data['data']);
     }
+    if (dataClassName == 'RecipeIngredientDetail') {
+      return deserialize<_inpog33j.RecipeIngredientDetail>(data['data']);
+    }
     if (dataClassName == 'RecipeMatch') {
       return deserialize<_ijym6e17.RecipeMatch>(data['data']);
+    }
+    if (dataClassName == 'SavedRecipe') {
+      return deserialize<_igrf4bz7.SavedRecipe>(data['data']);
     }
     if (dataClassName == 'UserProfile') {
       return deserialize<_ir2mn8w1.UserProfile>(data['data']);

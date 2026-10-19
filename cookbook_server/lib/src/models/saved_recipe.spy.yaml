@@ -1,0 +1,7 @@
+class: SavedRecipe
+table: saved_recipe
+
+fields:
+  userId: String
+  recipeId: int
+  savedAt: DateTime

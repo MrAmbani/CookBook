@@ -1,0 +1,7 @@
+class: RecipeIngredientDetail
+
+fields:
+  ingredientName: String
+  quantity: String
+  unit: String?
+  isOptional: bool

@@ -1,0 +1,5 @@
+class: RecipeDetails
+
+fields:
+  recipe: Recipe
+  ingredients: List<RecipeIngredientDetail>
