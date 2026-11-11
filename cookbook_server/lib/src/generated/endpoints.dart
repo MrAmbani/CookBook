@@ -22,6 +22,7 @@ import '../auth/profile_endpoint.dart' as _icd61av3;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
 import '../recipies/ingredient_endpoint.dart' as _ibftvyt1;
 import '../recipies/recipe_endpoint.dart' as _i08c4iss;
+import '../recipies/recipe_search_endpoint.dart' as _ie98sf55;
 import '../recipies/saved_recipe_endpoint.dart' as _iknj3c3y;
 
 class Endpoints extends _is.EndpointDispatch {
@@ -68,6 +69,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'recipe',
+          null,
+        ),
+      'recipeSearch': _ie98sf55.RecipeSearchEndpoint()
+        ..initialize(
+          server,
+          'recipeSearch',
           null,
         ),
       'savedRecipe': _iknj3c3y.SavedRecipeEndpoint()
@@ -447,6 +454,51 @@ class Endpoints extends _is.EndpointDispatch {
                     session,
                     params['recipeId'],
                   ),
+        ),
+        'generate': _is.MethodConnector(
+          name: 'generate',
+          params: {
+            'haveIngredients': _is.ParameterDescription(
+              name: 'haveIngredients',
+              type: _is.getType<List<String>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['recipe'] as _i08c4iss.RecipeEndpoint).generate(
+                    session,
+                    params['haveIngredients'],
+                  ),
+        ),
+      },
+    );
+    connectors['recipeSearch'] = _is.EndpointConnector(
+      name: 'recipeSearch',
+      endpoint: endpoints['recipeSearch']!,
+      methodConnectors: {
+        'search': _is.MethodConnector(
+          name: 'search',
+          params: {
+            'query': _is.ParameterDescription(
+              name: 'query',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['recipeSearch'] as _ie98sf55.RecipeSearchEndpoint)
+                      .search(
+                        session,
+                        params['query'],
+                      ),
         ),
       },
     );

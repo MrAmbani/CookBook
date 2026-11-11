@@ -21,6 +21,9 @@ ingredient:
 recipe:
   - recommend:
   - getDetails:
+  - generate:
+recipeSearch:
+  - search:
 savedRecipe:
   - save:
   - unsave:

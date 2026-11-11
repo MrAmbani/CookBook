@@ -100,7 +100,7 @@ void run(List<String> args) async {
   );
 
   // Start the server.
-    // Start the server.
+  // Start the server.
   await pod.start();
 
   // Seed the database with initial ingredients and recipes if empty.
@@ -111,4 +111,3 @@ void run(List<String> args) async {
     await session.close();
   }
 }
-

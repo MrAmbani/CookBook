@@ -9,3 +9,4 @@ workspace:
   - cookbook_server
   - cookbook_flutter
 
+http: ^1.2.0

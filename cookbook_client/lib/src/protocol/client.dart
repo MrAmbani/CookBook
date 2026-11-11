@@ -364,6 +364,32 @@ class EndpointRecipe extends _isc.EndpointRef {
         'getDetails',
         {'recipeId': recipeId},
       );
+
+  /// Generates a recipe with AI from [haveIngredients], saves it, and
+  /// returns its details. Returns null if the AI service fails.
+  _ida.Future<_ircsygfi.RecipeDetails?> generate(
+    List<String> haveIngredients,
+  ) => caller.callServerEndpoint<_ircsygfi.RecipeDetails?>(
+    'recipe',
+    'generate',
+    {'haveIngredients': haveIngredients},
+  );
+}
+
+/// {@category Endpoint}
+class EndpointRecipeSearch extends _isc.EndpointRef {
+  EndpointRecipeSearch(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'recipeSearch';
+
+  /// Case-insensitive search on recipe title.
+  _ida.Future<List<_ipe9xyte.Recipe>> search(String query) =>
+      caller.callServerEndpoint<List<_ipe9xyte.Recipe>>(
+        'recipeSearch',
+        'search',
+        {'query': query},
+      );
 }
 
 /// {@category Endpoint}
@@ -444,6 +470,7 @@ class Client extends _isc.ServerpodClientShared {
     greeting = EndpointGreeting(this);
     ingredient = EndpointIngredient(this);
     recipe = EndpointRecipe(this);
+    recipeSearch = EndpointRecipeSearch(this);
     savedRecipe = EndpointSavedRecipe(this);
     modules = Modules(this);
   }
@@ -462,6 +489,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointRecipe recipe;
 
+  late final EndpointRecipeSearch recipeSearch;
+
   late final EndpointSavedRecipe savedRecipe;
 
   late final Modules modules;
@@ -475,6 +504,7 @@ class Client extends _isc.ServerpodClientShared {
     'greeting': greeting,
     'ingredient': ingredient,
     'recipe': recipe,
+    'recipeSearch': recipeSearch,
     'savedRecipe': savedRecipe,
   };
 

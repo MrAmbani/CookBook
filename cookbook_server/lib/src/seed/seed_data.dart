@@ -12,8 +12,16 @@ Future<void> seedIfEmpty(Session session) async {
   final ingredientsData = <Map<String, String>>[
     {'name': 'tomato', 'category': 'vegetable', 'synonyms': 'tamatar,tomatoes'},
     {'name': 'onion', 'category': 'vegetable', 'synonyms': 'pyaz,onions'},
-    {'name': 'potato', 'category': 'vegetable', 'synonyms': 'aloo,aalu,potatoes'},
-    {'name': 'garlic', 'category': 'vegetable', 'synonyms': 'lahsun,garlic cloves'},
+    {
+      'name': 'potato',
+      'category': 'vegetable',
+      'synonyms': 'aloo,aalu,potatoes',
+    },
+    {
+      'name': 'garlic',
+      'category': 'vegetable',
+      'synonyms': 'lahsun,garlic cloves',
+    },
     {'name': 'ginger', 'category': 'vegetable', 'synonyms': 'adrak'},
     {'name': 'rice', 'category': 'grain', 'synonyms': 'chawal'},
     {'name': 'wheat flour', 'category': 'grain', 'synonyms': 'atta,flour'},
@@ -21,7 +29,11 @@ Future<void> seedIfEmpty(Session session) async {
     {'name': 'turmeric', 'category': 'spice', 'synonyms': 'haldi'},
     {'name': 'cumin', 'category': 'spice', 'synonyms': 'jeera'},
     {'name': 'coriander', 'category': 'spice', 'synonyms': 'dhania,cilantro'},
-    {'name': 'red chili powder', 'category': 'spice', 'synonyms': 'mirchi,chilli powder'},
+    {
+      'name': 'red chili powder',
+      'category': 'spice',
+      'synonyms': 'mirchi,chilli powder',
+    },
     {'name': 'oil', 'category': 'other', 'synonyms': 'cooking oil,tel'},
     {'name': 'ghee', 'category': 'dairy', 'synonyms': 'clarified butter'},
     {'name': 'milk', 'category': 'dairy', 'synonyms': 'doodh'},
@@ -108,7 +120,8 @@ Future<void> seedIfEmpty(Session session) async {
   await addRecipe(
     title: 'Boiled Egg and Toast',
     description: 'Fast protein breakfast.',
-    instructions: '1. Boil eggs 8 min.\n2. Toast bread.\n3. Peel eggs, season with salt.',
+    instructions:
+        '1. Boil eggs 8 min.\n2. Toast bread.\n3. Peel eggs, season with salt.',
     prepTime: 2,
     cookTime: 10,
     servings: 1,
@@ -141,7 +154,8 @@ Future<void> seedIfEmpty(Session session) async {
   await addRecipe(
     title: 'Chickpea Salad',
     description: 'No-cook protein salad.',
-    instructions: '1. Mix chickpeas, onion, tomato.\n2. Add salt and coriander.',
+    instructions:
+        '1. Mix chickpeas, onion, tomato.\n2. Add salt and coriander.',
     prepTime: 10,
     cookTime: 0,
     servings: 2,
@@ -176,5 +190,7 @@ Future<void> seedIfEmpty(Session session) async {
     ],
   );
 
-  session.log('Seeding complete: ${ingredientsData.length} ingredients, 5 recipes.');
+  session.log(
+    'Seeding complete: ${ingredientsData.length} ingredients, 5 recipes.',
+  );
 }

@@ -19,16 +19,22 @@ class _IngredientInputScreenState extends State<IngredientInputScreen> {
     if (text.isEmpty) return;
     _textController.clear();
 
-    final result = await client.ingredient.normalize([text]);
-
-    setState(() {
-      for (final name in result.recognized) {
-        if (!_recognized.contains(name)) _recognized.add(name);
-      }
-      for (final name in result.unrecognized) {
-        if (!_unrecognized.contains(name)) _unrecognized.add(name);
-      }
-    });
+    try {
+      final result = await client.ingredient.normalize([text]);
+      setState(() {
+        for (final name in result.recognized) {
+          if (!_recognized.contains(name)) _recognized.add(name);
+        }
+        for (final name in result.unrecognized) {
+          if (!_unrecognized.contains(name)) _unrecognized.add(name);
+        }
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cannot reach the server. Is it running?')),
+      );
+    }
   }
 
   void _removeRecognized(String name) {
@@ -39,8 +45,6 @@ class _IngredientInputScreenState extends State<IngredientInputScreen> {
     setState(() => _unrecognized.remove(name));
   }
 
-  /// User can choose to keep an unrecognized item anyway (SRS: keep or
-  /// remove) — it just won't match any recipe ingredient.
   void _keepUnrecognizedAnyway(String name) {
     setState(() {
       _unrecognized.remove(name);
@@ -49,12 +53,26 @@ class _IngredientInputScreenState extends State<IngredientInputScreen> {
   }
 
   Future<void> _findRecipes() async {
-    final results = await client.recipe.recommend(_recognized);
-    if (!mounted) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => RecipeResultsScreen(results: results)),
-    );
+    try {
+      final results = await client.recipe.recommend(_recognized);
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RecipeResultsScreen(
+            results: results,
+            haveIngredients: List.of(_recognized),
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Could not load recipes. Is the server running?'),
+        ),
+      );
+    }
   }
 
   @override
@@ -86,7 +104,10 @@ class _IngredientInputScreenState extends State<IngredientInputScreen> {
             if (_recognized.isNotEmpty) ...[
               const Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Recognized', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(
+                  'Recognized',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
               Wrap(
                 spacing: 8,
@@ -103,8 +124,11 @@ class _IngredientInputScreenState extends State<IngredientInputScreen> {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Not recognized — tap to keep anyway",
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                  'Not recognized: tap to keep anyway',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
+                  ),
                 ),
               ),
               Wrap(
