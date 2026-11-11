@@ -24,6 +24,7 @@ import '../recipies/ingredient_endpoint.dart' as _ibftvyt1;
 import '../recipies/recipe_endpoint.dart' as _i08c4iss;
 import '../recipies/recipe_search_endpoint.dart' as _ie98sf55;
 import '../recipies/saved_recipe_endpoint.dart' as _iknj3c3y;
+import '../social/post_endpoint.dart' as _itlceoes;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -81,6 +82,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'savedRecipe',
+          null,
+        ),
+      'post': _itlceoes.PostEndpoint()
+        ..initialize(
+          server,
+          'post',
           null,
         ),
     };
@@ -576,6 +583,80 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         params['recipeId'],
                       ),
+        ),
+      },
+    );
+    connectors['post'] = _is.EndpointConnector(
+      name: 'post',
+      endpoint: endpoints['post']!,
+      methodConnectors: {
+        'getFeed': _is.MethodConnector(
+          name: 'getFeed',
+          params: {
+            'offset': _is.ParameterDescription(
+              name: 'offset',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'limit': _is.ParameterDescription(
+              name: 'limit',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['post'] as _itlceoes.PostEndpoint).getFeed(
+                session,
+                offset: params['offset'],
+                limit: params['limit'],
+              ),
+        ),
+        'createPost': _is.MethodConnector(
+          name: 'createPost',
+          params: {
+            'caption': _is.ParameterDescription(
+              name: 'caption',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'recipeId': _is.ParameterDescription(
+              name: 'recipeId',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['post'] as _itlceoes.PostEndpoint).createPost(
+                    session,
+                    caption: params['caption'],
+                    recipeId: params['recipeId'],
+                  ),
+        ),
+        'deletePost': _is.MethodConnector(
+          name: 'deletePost',
+          params: {
+            'postId': _is.ParameterDescription(
+              name: 'postId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['post'] as _itlceoes.PostEndpoint).deletePost(
+                    session,
+                    params['postId'],
+                  ),
         ),
       },
     );

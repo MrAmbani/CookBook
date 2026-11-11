@@ -20,6 +20,7 @@ import 'package:cookbook_server/src/generated/normalized_ingredients.dart'
 import 'package:cookbook_server/src/generated/recipe.dart' as _iiy2wcna;
 import 'package:cookbook_server/src/generated/recipe_details.dart' as _isk4v94r;
 import 'package:cookbook_server/src/generated/recipe_match.dart' as _i1aylshw;
+import 'package:cookbook_server/src/generated/social_post.dart' as _i5o1a7ak;
 import 'package:cookbook_server/src/generated/user_profile.dart' as _i4pszz4y;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
@@ -170,6 +171,8 @@ class TestEndpoints {
   late final _RecipeSearchEndpoint recipeSearch;
 
   late final _SavedRecipeEndpoint savedRecipe;
+
+  late final _PostEndpoint post;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -212,6 +215,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     savedRecipe = _SavedRecipeEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    post = _PostEndpoint(
       endpoints,
       serializationManager,
     );
@@ -1018,6 +1025,118 @@ class _SavedRecipeEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<bool>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _PostEndpoint {
+  _PostEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<List<_i5o1a7ak.SocialPost>> getFeed(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int offset,
+    required int limit,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'post',
+            method: 'getFeed',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'post',
+          methodName: 'getFeed',
+          parameters: _ist.testObjectToJson({
+            'offset': offset,
+            'limit': limit,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_i5o1a7ak.SocialPost>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i5o1a7ak.SocialPost> createPost(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String caption,
+    int? recipeId,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'post',
+            method: 'createPost',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'post',
+          methodName: 'createPost',
+          parameters: _ist.testObjectToJson({
+            'caption': caption,
+            'recipeId': recipeId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i5o1a7ak.SocialPost>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<void> deletePost(
+    _ist.TestSessionBuilder sessionBuilder,
+    int postId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'post',
+            method: 'deletePost',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'post',
+          methodName: 'deletePost',
+          parameters: _ist.testObjectToJson({'postId': postId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<void>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

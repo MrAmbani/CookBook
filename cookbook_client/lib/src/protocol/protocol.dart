@@ -13,6 +13,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:cookbook_client/src/protocol/recipe.dart' as _ipe9xyte;
 import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
+import 'package:cookbook_client/src/protocol/social_post.dart' as _iid4axvy;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
@@ -27,6 +28,7 @@ import 'recipe_ingrediants.dart' as _i2urvore;
 import 'recipe_ingredient_details.dart' as _inpog33j;
 import 'recipe_match.dart' as _ijym6e17;
 import 'saved_recipe.dart' as _igrf4bz7;
+import 'social_post.dart' as _ixq4a7a9;
 import 'user_profile.dart' as _ir2mn8w1;
 export 'greetings/greeting.dart';
 export 'ingrediants.dart';
@@ -37,6 +39,7 @@ export 'recipe_ingrediants.dart';
 export 'recipe_ingredient_details.dart';
 export 'recipe_match.dart';
 export 'saved_recipe.dart';
+export 'social_post.dart';
 export 'user_profile.dart';
 export 'client.dart';
 
@@ -101,6 +104,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _igrf4bz7.SavedRecipe) {
       return _igrf4bz7.SavedRecipe.fromJson(data) as T;
     }
+    if (t == _ixq4a7a9.SocialPost) {
+      return _ixq4a7a9.SocialPost.fromJson(data) as T;
+    }
     if (t == _ir2mn8w1.UserProfile) {
       return _ir2mn8w1.UserProfile.fromJson(data) as T;
     }
@@ -139,6 +145,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_igrf4bz7.SavedRecipe?>()) {
       return (data != null ? _igrf4bz7.SavedRecipe.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_ixq4a7a9.SocialPost?>()) {
+      return (data != null ? _ixq4a7a9.SocialPost.fromJson(data) : null) as T;
+    }
     if (t == _isc.getType<_ir2mn8w1.UserProfile?>()) {
       return (data != null ? _ir2mn8w1.UserProfile.fromJson(data) : null) as T;
     }
@@ -166,6 +175,12 @@ class Protocol extends _isc.SerializationManager {
               .toList()
           as T;
     }
+    if (t == List<_iid4axvy.SocialPost>) {
+      return (data as List)
+              .map((e) => deserialize<_iid4axvy.SocialPost>(e))
+              .toList()
+          as T;
+    }
     try {
       return _iaic.Protocol().deserialize<T>(data, t);
     } on _isc.DeserializationTypeNotFoundException catch (_) {}
@@ -186,6 +201,7 @@ class Protocol extends _isc.SerializationManager {
       _inpog33j.RecipeIngredientDetail => 'RecipeIngredientDetail',
       _ijym6e17.RecipeMatch => 'RecipeMatch',
       _igrf4bz7.SavedRecipe => 'SavedRecipe',
+      _ixq4a7a9.SocialPost => 'SocialPost',
       _ir2mn8w1.UserProfile => 'UserProfile',
       _ => null,
     };
@@ -219,6 +235,8 @@ class Protocol extends _isc.SerializationManager {
         return 'RecipeMatch';
       case _igrf4bz7.SavedRecipe():
         return 'SavedRecipe';
+      case _ixq4a7a9.SocialPost():
+        return 'SocialPost';
       case _ir2mn8w1.UserProfile():
         return 'UserProfile';
     }
@@ -269,6 +287,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'SavedRecipe') {
       return deserialize<_igrf4bz7.SavedRecipe>(data['data']);
+    }
+    if (dataClassName == 'SocialPost') {
+      return deserialize<_ixq4a7a9.SocialPost>(data['data']);
     }
     if (dataClassName == 'UserProfile') {
       return deserialize<_ir2mn8w1.UserProfile>(data['data']);

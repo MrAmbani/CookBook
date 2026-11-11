@@ -29,3 +29,7 @@ savedRecipe:
   - unsave:
   - getSaved:
   - isSaved:
+post:
+  - getFeed:
+  - createPost:
+  - deletePost:

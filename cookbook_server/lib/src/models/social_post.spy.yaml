@@ -1,0 +1,9 @@
+class: SocialPost
+table: social_post
+
+fields:
+  userId: String
+  authorName: String
+  recipeId: int?
+  caption: String
+  createdAt: DateTime

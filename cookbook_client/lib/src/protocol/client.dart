@@ -18,6 +18,7 @@ import 'package:cookbook_client/src/protocol/normalized_ingredients.dart'
 import 'package:cookbook_client/src/protocol/recipe.dart' as _ipe9xyte;
 import 'package:cookbook_client/src/protocol/recipe_details.dart' as _ircsygfi;
 import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
+import 'package:cookbook_client/src/protocol/social_post.dart' as _iid4axvy;
 import 'package:cookbook_client/src/protocol/user_profile.dart' as _itv3alm3;
 import 'package:http/http.dart' as _i85jenna;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
@@ -425,6 +426,47 @@ class EndpointSavedRecipe extends _isc.EndpointRef {
   );
 }
 
+/// {@category Endpoint}
+class EndpointPost extends _isc.EndpointRef {
+  EndpointPost(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'post';
+
+  /// Newest posts first. Anyone, including guests, can read the feed.
+  _ida.Future<List<_iid4axvy.SocialPost>> getFeed({
+    required int offset,
+    required int limit,
+  }) => caller.callServerEndpoint<List<_iid4axvy.SocialPost>>(
+    'post',
+    'getFeed',
+    {
+      'offset': offset,
+      'limit': limit,
+    },
+  );
+
+  _ida.Future<_iid4axvy.SocialPost> createPost({
+    required String caption,
+    int? recipeId,
+  }) => caller.callServerEndpoint<_iid4axvy.SocialPost>(
+    'post',
+    'createPost',
+    {
+      'caption': caption,
+      'recipeId': recipeId,
+    },
+  );
+
+  /// Owner or admin only. The check happens here on the server, so hiding
+  /// the button in Flutter is just a convenience.
+  _ida.Future<void> deletePost(int postId) => caller.callServerEndpoint<void>(
+    'post',
+    'deletePost',
+    {'postId': postId},
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _iaic.Caller(client);
@@ -472,6 +514,7 @@ class Client extends _isc.ServerpodClientShared {
     recipe = EndpointRecipe(this);
     recipeSearch = EndpointRecipeSearch(this);
     savedRecipe = EndpointSavedRecipe(this);
+    post = EndpointPost(this);
     modules = Modules(this);
   }
 
@@ -493,6 +536,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointSavedRecipe savedRecipe;
 
+  late final EndpointPost post;
+
   late final Modules modules;
 
   @override
@@ -506,6 +551,7 @@ class Client extends _isc.ServerpodClientShared {
     'recipe': recipe,
     'recipeSearch': recipeSearch,
     'savedRecipe': savedRecipe,
+    'post': post,
   };
 
   @override

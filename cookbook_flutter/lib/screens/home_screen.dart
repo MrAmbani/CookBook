@@ -7,6 +7,7 @@ import 'sign_in_screen.dart';
 import 'ingredient_input_screen.dart';
 import 'search_screen.dart';
 import 'saved_recipes_screen.dart';
+import 'feed_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -118,8 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListTile(
                     leading: const CircleAvatar(child: Icon(Icons.person)),
                     title: Text('Hello, $name'),
-                    subtitle: Text(
-                        role == null ? 'Not logged in' : 'Role: $role'),
+                    subtitle:
+                        Text(role == null ? 'Not logged in' : 'Role: $role'),
                     trailing: _profile == null
                         ? null
                         : IconButton(
@@ -129,12 +130,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                _menuButton(
-                    Icons.kitchen, 'Find Recipes', () => const IngredientInputScreen()),
+                _menuButton(Icons.kitchen, 'Find Recipes',
+                    () => const IngredientInputScreen()),
                 _menuButton(
                     Icons.search, 'Search Recipes', () => const SearchScreen()),
                 _menuButton(Icons.bookmark, 'Saved Recipes',
                     () => const SavedRecipesScreen()),
+                _menuButton(Icons.forum, 'Community', () => const FeedScreen()),
               ],
             ),
     );
