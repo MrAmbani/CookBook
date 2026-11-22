@@ -82,11 +82,15 @@ class PostEndpoint extends Endpoint {
       throw Exception('Not allowed to delete this post');
     }
 
-    // Remove the post's likes first so no orphan rows are left behind.
+    // Remove the post's likes and comments first first so no orphan rows are left behind.
     await PostLike.db.deleteWhere(
       session,
       where: (t) => t.postId.equals(postId),
     );
     await SocialPost.db.deleteRow(session, post);
+    await PostComment.db.deleteWhere(
+      session,
+      where: (t) => t.postId.equals(postId),
+    );
   }
 }

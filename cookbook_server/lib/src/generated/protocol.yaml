@@ -29,6 +29,13 @@ savedRecipe:
   - unsave:
   - getSaved:
   - isSaved:
+comment:
+  - getComments:
+  - add:
+  - delete:
+follow:
+  - getUserSummary:
+  - toggle:
 like:
   - toggle:
 post:

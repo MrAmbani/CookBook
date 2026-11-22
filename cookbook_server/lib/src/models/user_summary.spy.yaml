@@ -1,0 +1,11 @@
+class: UserSummary
+
+fields:
+  userId: String
+  name: String
+  bio: String?
+  role: String
+  followerCount: int
+  followingCount: int
+  followedByMe: bool
+  isMe: bool

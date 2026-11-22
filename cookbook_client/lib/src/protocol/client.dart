@@ -16,11 +16,13 @@ import 'package:cookbook_client/src/protocol/greetings/greeting.dart'
     as _ipvxrsk2;
 import 'package:cookbook_client/src/protocol/normalized_ingredients.dart'
     as _iqjhkawc;
+import 'package:cookbook_client/src/protocol/post_comment.dart' as _itl7hg3m;
 import 'package:cookbook_client/src/protocol/recipe.dart' as _ipe9xyte;
 import 'package:cookbook_client/src/protocol/recipe_details.dart' as _ircsygfi;
 import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
 import 'package:cookbook_client/src/protocol/social_post.dart' as _iid4axvy;
 import 'package:cookbook_client/src/protocol/user_profile.dart' as _itv3alm3;
+import 'package:cookbook_client/src/protocol/user_summary.dart' as _iw6m0xok;
 import 'package:http/http.dart' as _i85jenna;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
@@ -428,6 +430,67 @@ class EndpointSavedRecipe extends _isc.EndpointRef {
 }
 
 /// {@category Endpoint}
+class EndpointComment extends _isc.EndpointRef {
+  EndpointComment(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'comment';
+
+  /// Oldest first, so conversations read top to bottom.
+  /// Anyone, including guests, can read comments.
+  _ida.Future<List<_itl7hg3m.PostComment>> getComments(int postId) =>
+      caller.callServerEndpoint<List<_itl7hg3m.PostComment>>(
+        'comment',
+        'getComments',
+        {'postId': postId},
+      );
+
+  _ida.Future<_itl7hg3m.PostComment> add({
+    required int postId,
+    required String text,
+  }) => caller.callServerEndpoint<_itl7hg3m.PostComment>(
+    'comment',
+    'add',
+    {
+      'postId': postId,
+      'text': text,
+    },
+  );
+
+  /// Owner or admin only, checked here on the server.
+  _ida.Future<void> delete(int commentId) => caller.callServerEndpoint<void>(
+    'comment',
+    'delete',
+    {'commentId': commentId},
+  );
+}
+
+/// {@category Endpoint}
+class EndpointFollow extends _isc.EndpointRef {
+  EndpointFollow(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'follow';
+
+  /// Public info about a user plus follower counts. Guests can read it.
+  _ida.Future<_iw6m0xok.UserSummary> getUserSummary(String userId) =>
+      caller.callServerEndpoint<_iw6m0xok.UserSummary>(
+        'follow',
+        'getUserSummary',
+        {'userId': userId},
+      );
+
+  /// Follows the user if you don't, unfollows if you do.
+  /// Returns true if you are now following them.
+  _ida.Future<bool> toggle(String targetUserId) =>
+      caller.callServerEndpoint<bool>(
+        'follow',
+        'toggle',
+        {'targetUserId': targetUserId},
+      );
+}
+
+/// {@category Endpoint}
 class EndpointLike extends _isc.EndpointRef {
   EndpointLike(_isc.EndpointCaller caller) : super(caller);
 
@@ -532,6 +595,8 @@ class Client extends _isc.ServerpodClientShared {
     recipe = EndpointRecipe(this);
     recipeSearch = EndpointRecipeSearch(this);
     savedRecipe = EndpointSavedRecipe(this);
+    comment = EndpointComment(this);
+    follow = EndpointFollow(this);
     like = EndpointLike(this);
     post = EndpointPost(this);
     modules = Modules(this);
@@ -555,6 +620,10 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointSavedRecipe savedRecipe;
 
+  late final EndpointComment comment;
+
+  late final EndpointFollow follow;
+
   late final EndpointLike like;
 
   late final EndpointPost post;
@@ -572,6 +641,8 @@ class Client extends _isc.ServerpodClientShared {
     'recipe': recipe,
     'recipeSearch': recipeSearch,
     'savedRecipe': savedRecipe,
+    'comment': comment,
+    'follow': follow,
     'like': like,
     'post': post,
   };

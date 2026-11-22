@@ -12,6 +12,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:cookbook_client/src/protocol/feed_item.dart' as _ifq0pwto;
+import 'package:cookbook_client/src/protocol/post_comment.dart' as _itl7hg3m;
 import 'package:cookbook_client/src/protocol/recipe.dart' as _ipe9xyte;
 import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
@@ -23,6 +24,7 @@ import 'feed_item.dart' as _ionihcdq;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'ingrediants.dart' as _i9otnek0;
 import 'normalized_ingredients.dart' as _imncc5ah;
+import 'post_comment.dart' as _imkhylta;
 import 'post_like.dart' as _i2v49lle;
 import 'recipe.dart' as _ixmlxsuh;
 import 'recipe_details.dart' as _isbyitoy;
@@ -31,11 +33,14 @@ import 'recipe_ingredient_details.dart' as _inpog33j;
 import 'recipe_match.dart' as _ijym6e17;
 import 'saved_recipe.dart' as _igrf4bz7;
 import 'social_post.dart' as _ixq4a7a9;
+import 'user_follow.dart' as _irjv1u4s;
 import 'user_profile.dart' as _ir2mn8w1;
+import 'user_summary.dart' as _izljl0an;
 export 'feed_item.dart';
 export 'greetings/greeting.dart';
 export 'ingrediants.dart';
 export 'normalized_ingredients.dart';
+export 'post_comment.dart';
 export 'post_like.dart';
 export 'recipe.dart';
 export 'recipe_details.dart';
@@ -44,7 +49,9 @@ export 'recipe_ingredient_details.dart';
 export 'recipe_match.dart';
 export 'saved_recipe.dart';
 export 'social_post.dart';
+export 'user_follow.dart';
 export 'user_profile.dart';
+export 'user_summary.dart';
 export 'client.dart';
 
 class Protocol extends _isc.SerializationManager {
@@ -93,6 +100,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _imncc5ah.NormalizedIngredients) {
       return _imncc5ah.NormalizedIngredients.fromJson(data) as T;
     }
+    if (t == _imkhylta.PostComment) {
+      return _imkhylta.PostComment.fromJson(data) as T;
+    }
     if (t == _i2v49lle.PostLike) {
       return _i2v49lle.PostLike.fromJson(data) as T;
     }
@@ -117,8 +127,14 @@ class Protocol extends _isc.SerializationManager {
     if (t == _ixq4a7a9.SocialPost) {
       return _ixq4a7a9.SocialPost.fromJson(data) as T;
     }
+    if (t == _irjv1u4s.UserFollow) {
+      return _irjv1u4s.UserFollow.fromJson(data) as T;
+    }
     if (t == _ir2mn8w1.UserProfile) {
       return _ir2mn8w1.UserProfile.fromJson(data) as T;
+    }
+    if (t == _izljl0an.UserSummary) {
+      return _izljl0an.UserSummary.fromJson(data) as T;
     }
     if (t == _isc.getType<_ionihcdq.FeedItem?>()) {
       return (data != null ? _ionihcdq.FeedItem.fromJson(data) : null) as T;
@@ -134,6 +150,9 @@ class Protocol extends _isc.SerializationManager {
               ? _imncc5ah.NormalizedIngredients.fromJson(data)
               : null)
           as T;
+    }
+    if (t == _isc.getType<_imkhylta.PostComment?>()) {
+      return (data != null ? _imkhylta.PostComment.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_i2v49lle.PostLike?>()) {
       return (data != null ? _i2v49lle.PostLike.fromJson(data) : null) as T;
@@ -164,8 +183,14 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_ixq4a7a9.SocialPost?>()) {
       return (data != null ? _ixq4a7a9.SocialPost.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_irjv1u4s.UserFollow?>()) {
+      return (data != null ? _irjv1u4s.UserFollow.fromJson(data) : null) as T;
+    }
     if (t == _isc.getType<_ir2mn8w1.UserProfile?>()) {
       return (data != null ? _ir2mn8w1.UserProfile.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_izljl0an.UserSummary?>()) {
+      return (data != null ? _izljl0an.UserSummary.fromJson(data) : null) as T;
     }
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
@@ -191,6 +216,12 @@ class Protocol extends _isc.SerializationManager {
               .toList()
           as T;
     }
+    if (t == List<_itl7hg3m.PostComment>) {
+      return (data as List)
+              .map((e) => deserialize<_itl7hg3m.PostComment>(e))
+              .toList()
+          as T;
+    }
     if (t == List<_ifq0pwto.FeedItem>) {
       return (data as List)
               .map((e) => deserialize<_ifq0pwto.FeedItem>(e))
@@ -212,6 +243,7 @@ class Protocol extends _isc.SerializationManager {
       _izw8z7ou.Greeting => 'Greeting',
       _i9otnek0.Ingredient => 'Ingredient',
       _imncc5ah.NormalizedIngredients => 'NormalizedIngredients',
+      _imkhylta.PostComment => 'PostComment',
       _i2v49lle.PostLike => 'PostLike',
       _ixmlxsuh.Recipe => 'Recipe',
       _isbyitoy.RecipeDetails => 'RecipeDetails',
@@ -220,7 +252,9 @@ class Protocol extends _isc.SerializationManager {
       _ijym6e17.RecipeMatch => 'RecipeMatch',
       _igrf4bz7.SavedRecipe => 'SavedRecipe',
       _ixq4a7a9.SocialPost => 'SocialPost',
+      _irjv1u4s.UserFollow => 'UserFollow',
       _ir2mn8w1.UserProfile => 'UserProfile',
+      _izljl0an.UserSummary => 'UserSummary',
       _ => null,
     };
   }
@@ -243,6 +277,8 @@ class Protocol extends _isc.SerializationManager {
         return 'Ingredient';
       case _imncc5ah.NormalizedIngredients():
         return 'NormalizedIngredients';
+      case _imkhylta.PostComment():
+        return 'PostComment';
       case _i2v49lle.PostLike():
         return 'PostLike';
       case _ixmlxsuh.Recipe():
@@ -259,8 +295,12 @@ class Protocol extends _isc.SerializationManager {
         return 'SavedRecipe';
       case _ixq4a7a9.SocialPost():
         return 'SocialPost';
+      case _irjv1u4s.UserFollow():
+        return 'UserFollow';
       case _ir2mn8w1.UserProfile():
         return 'UserProfile';
+      case _izljl0an.UserSummary():
+        return 'UserSummary';
     }
     className = _iaic.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -295,6 +335,9 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'NormalizedIngredients') {
       return deserialize<_imncc5ah.NormalizedIngredients>(data['data']);
     }
+    if (dataClassName == 'PostComment') {
+      return deserialize<_imkhylta.PostComment>(data['data']);
+    }
     if (dataClassName == 'PostLike') {
       return deserialize<_i2v49lle.PostLike>(data['data']);
     }
@@ -319,8 +362,14 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'SocialPost') {
       return deserialize<_ixq4a7a9.SocialPost>(data['data']);
     }
+    if (dataClassName == 'UserFollow') {
+      return deserialize<_irjv1u4s.UserFollow>(data['data']);
+    }
     if (dataClassName == 'UserProfile') {
       return deserialize<_ir2mn8w1.UserProfile>(data['data']);
+    }
+    if (dataClassName == 'UserSummary') {
+      return deserialize<_izljl0an.UserSummary>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);

@@ -8,6 +8,7 @@ import 'ingredient_input_screen.dart';
 import 'search_screen.dart';
 import 'saved_recipes_screen.dart';
 import 'feed_screen.dart';
+import 'user_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,10 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (newName == null || newName.isEmpty || _profile == null) return;
     try {
-      final updated = await client.profile.updateProfile(
-        name: newName,
-        bio: _profile!.bio,
-      );
+      final updated = await client.profile
+          .updateProfile(name: newName, bio: _profile!.bio);
       if (!mounted) return;
       setState(() => _profile = updated);
     } catch (e) {
@@ -74,6 +73,17 @@ class _HomeScreenState extends State<HomeScreen> {
         SnackBar(content: Text('Could not update name: $e')),
       );
     }
+  }
+
+  void _openMyProfile() {
+    final profile = _profile;
+    if (profile == null) return; // guests have no profile page
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => UserProfileScreen(userId: profile.userId),
+      ),
+    ).then((_) => _loadProfile());
   }
 
   Widget _menuButton(IconData icon, String label, Widget Function() page) {
@@ -122,8 +132,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: const CircleAvatar(child: Icon(Icons.person)),
                     title: Text('Hello, $name'),
                     subtitle: Text(
-                      role == null ? 'Not logged in' : 'Role: $role',
+                      role == null
+                          ? 'Not logged in'
+                          : 'Role: $role · tap to view profile',
                     ),
+                    onTap: _profile == null ? null : _openMyProfile,
                     trailing: _profile == null
                         ? null
                         : IconButton(
@@ -133,21 +146,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                _menuButton(Icons.kitchen, 'Find Recipes',
+                    () => const IngredientInputScreen()),
                 _menuButton(
-                  Icons.kitchen,
-                  'Find Recipes',
-                  () => const IngredientInputScreen(),
-                ),
-                _menuButton(
-                  Icons.search,
-                  'Search Recipes',
-                  () => const SearchScreen(),
-                ),
-                _menuButton(
-                  Icons.bookmark,
-                  'Saved Recipes',
-                  () => const SavedRecipesScreen(),
-                ),
+                    Icons.search, 'Search Recipes', () => const SearchScreen()),
+                _menuButton(Icons.bookmark, 'Saved Recipes',
+                    () => const SavedRecipesScreen()),
                 _menuButton(Icons.forum, 'Community', () => const FeedScreen()),
               ],
             ),

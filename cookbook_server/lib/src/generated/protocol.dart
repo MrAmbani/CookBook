@@ -12,6 +12,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:cookbook_server/src/generated/feed_item.dart' as _ir4kknam;
+import 'package:cookbook_server/src/generated/post_comment.dart' as _i48c7e7q;
 import 'package:cookbook_server/src/generated/recipe.dart' as _iiy2wcna;
 import 'package:cookbook_server/src/generated/recipe_match.dart' as _i1aylshw;
 import 'package:serverpod/protocol.dart' as _isp;
@@ -24,6 +25,7 @@ import 'feed_item.dart' as _ionihcdq;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'ingrediants.dart' as _i9otnek0;
 import 'normalized_ingredients.dart' as _imncc5ah;
+import 'post_comment.dart' as _imkhylta;
 import 'post_like.dart' as _i2v49lle;
 import 'recipe.dart' as _ixmlxsuh;
 import 'recipe_details.dart' as _isbyitoy;
@@ -32,11 +34,14 @@ import 'recipe_ingredient_details.dart' as _inpog33j;
 import 'recipe_match.dart' as _ijym6e17;
 import 'saved_recipe.dart' as _igrf4bz7;
 import 'social_post.dart' as _ixq4a7a9;
+import 'user_follow.dart' as _irjv1u4s;
 import 'user_profile.dart' as _ir2mn8w1;
+import 'user_summary.dart' as _izljl0an;
 export 'feed_item.dart';
 export 'greetings/greeting.dart';
 export 'ingrediants.dart';
 export 'normalized_ingredients.dart';
+export 'post_comment.dart';
 export 'post_like.dart';
 export 'recipe.dart';
 export 'recipe_details.dart';
@@ -45,7 +50,9 @@ export 'recipe_ingredient_details.dart';
 export 'recipe_match.dart';
 export 'saved_recipe.dart';
 export 'social_post.dart';
+export 'user_follow.dart';
 export 'user_profile.dart';
+export 'user_summary.dart';
 
 class Protocol extends _is.DatabaseSerializationManager {
   Protocol._();
@@ -89,6 +96,68 @@ class Protocol extends _is.DatabaseSerializationManager {
       ],
       foreignKeys: [],
       indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'post_comment',
+      dartName: 'PostComment',
+      schema: 'public',
+      module: 'cookbook',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'postId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'userId',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'authorName',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'text',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _isp.IndexDefinition(
+          indexName: 'post_comment_post_idx',
+          tableSpace: null,
+          elements: [
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'postId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
       managed: true,
     ),
     _isp.TableDefinition(
@@ -350,6 +419,60 @@ class Protocol extends _is.DatabaseSerializationManager {
       managed: true,
     ),
     _isp.TableDefinition(
+      name: 'user_follow',
+      dartName: 'UserFollow',
+      schema: 'public',
+      module: 'cookbook',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'followerId',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'followingId',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _isp.IndexDefinition(
+          indexName: 'user_follow_unique_idx',
+          tableSpace: null,
+          elements: [
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'followerId',
+            ),
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'followingId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _isp.TableDefinition(
       name: 'user_profile',
       dartName: 'UserProfile',
       schema: 'public',
@@ -447,6 +570,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _imncc5ah.NormalizedIngredients) {
       return _imncc5ah.NormalizedIngredients.fromJson(data) as T;
     }
+    if (t == _imkhylta.PostComment) {
+      return _imkhylta.PostComment.fromJson(data) as T;
+    }
     if (t == _i2v49lle.PostLike) {
       return _i2v49lle.PostLike.fromJson(data) as T;
     }
@@ -471,8 +597,14 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _ixq4a7a9.SocialPost) {
       return _ixq4a7a9.SocialPost.fromJson(data) as T;
     }
+    if (t == _irjv1u4s.UserFollow) {
+      return _irjv1u4s.UserFollow.fromJson(data) as T;
+    }
     if (t == _ir2mn8w1.UserProfile) {
       return _ir2mn8w1.UserProfile.fromJson(data) as T;
+    }
+    if (t == _izljl0an.UserSummary) {
+      return _izljl0an.UserSummary.fromJson(data) as T;
     }
     if (t == _is.getType<_ionihcdq.FeedItem?>()) {
       return (data != null ? _ionihcdq.FeedItem.fromJson(data) : null) as T;
@@ -488,6 +620,9 @@ class Protocol extends _is.DatabaseSerializationManager {
               ? _imncc5ah.NormalizedIngredients.fromJson(data)
               : null)
           as T;
+    }
+    if (t == _is.getType<_imkhylta.PostComment?>()) {
+      return (data != null ? _imkhylta.PostComment.fromJson(data) : null) as T;
     }
     if (t == _is.getType<_i2v49lle.PostLike?>()) {
       return (data != null ? _i2v49lle.PostLike.fromJson(data) : null) as T;
@@ -518,8 +653,14 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _is.getType<_ixq4a7a9.SocialPost?>()) {
       return (data != null ? _ixq4a7a9.SocialPost.fromJson(data) : null) as T;
     }
+    if (t == _is.getType<_irjv1u4s.UserFollow?>()) {
+      return (data != null ? _irjv1u4s.UserFollow.fromJson(data) : null) as T;
+    }
     if (t == _is.getType<_ir2mn8w1.UserProfile?>()) {
       return (data != null ? _ir2mn8w1.UserProfile.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_izljl0an.UserSummary?>()) {
+      return (data != null ? _izljl0an.UserSummary.fromJson(data) : null) as T;
     }
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
@@ -542,6 +683,12 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == List<_iiy2wcna.Recipe>) {
       return (data as List)
               .map((e) => deserialize<_iiy2wcna.Recipe>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i48c7e7q.PostComment>) {
+      return (data as List)
+              .map((e) => deserialize<_i48c7e7q.PostComment>(e))
               .toList()
           as T;
     }
@@ -569,6 +716,7 @@ class Protocol extends _is.DatabaseSerializationManager {
       _izw8z7ou.Greeting => 'Greeting',
       _i9otnek0.Ingredient => 'Ingredient',
       _imncc5ah.NormalizedIngredients => 'NormalizedIngredients',
+      _imkhylta.PostComment => 'PostComment',
       _i2v49lle.PostLike => 'PostLike',
       _ixmlxsuh.Recipe => 'Recipe',
       _isbyitoy.RecipeDetails => 'RecipeDetails',
@@ -577,7 +725,9 @@ class Protocol extends _is.DatabaseSerializationManager {
       _ijym6e17.RecipeMatch => 'RecipeMatch',
       _igrf4bz7.SavedRecipe => 'SavedRecipe',
       _ixq4a7a9.SocialPost => 'SocialPost',
+      _irjv1u4s.UserFollow => 'UserFollow',
       _ir2mn8w1.UserProfile => 'UserProfile',
+      _izljl0an.UserSummary => 'UserSummary',
       _ => null,
     };
   }
@@ -600,6 +750,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'Ingredient';
       case _imncc5ah.NormalizedIngredients():
         return 'NormalizedIngredients';
+      case _imkhylta.PostComment():
+        return 'PostComment';
       case _i2v49lle.PostLike():
         return 'PostLike';
       case _ixmlxsuh.Recipe():
@@ -616,8 +768,12 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'SavedRecipe';
       case _ixq4a7a9.SocialPost():
         return 'SocialPost';
+      case _irjv1u4s.UserFollow():
+        return 'UserFollow';
       case _ir2mn8w1.UserProfile():
         return 'UserProfile';
+      case _izljl0an.UserSummary():
+        return 'UserSummary';
     }
     className = _iais.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -656,6 +812,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (dataClassName == 'NormalizedIngredients') {
       return deserialize<_imncc5ah.NormalizedIngredients>(data['data']);
     }
+    if (dataClassName == 'PostComment') {
+      return deserialize<_imkhylta.PostComment>(data['data']);
+    }
     if (dataClassName == 'PostLike') {
       return deserialize<_i2v49lle.PostLike>(data['data']);
     }
@@ -680,8 +839,14 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (dataClassName == 'SocialPost') {
       return deserialize<_ixq4a7a9.SocialPost>(data['data']);
     }
+    if (dataClassName == 'UserFollow') {
+      return deserialize<_irjv1u4s.UserFollow>(data['data']);
+    }
     if (dataClassName == 'UserProfile') {
       return deserialize<_ir2mn8w1.UserProfile>(data['data']);
+    }
+    if (dataClassName == 'UserSummary') {
+      return deserialize<_izljl0an.UserSummary>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
@@ -726,6 +891,8 @@ class Protocol extends _is.DatabaseSerializationManager {
     switch (t) {
       case _i9otnek0.Ingredient:
         return _i9otnek0.Ingredient.t;
+      case _imkhylta.PostComment:
+        return _imkhylta.PostComment.t;
       case _i2v49lle.PostLike:
         return _i2v49lle.PostLike.t;
       case _ixmlxsuh.Recipe:
@@ -736,6 +903,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return _igrf4bz7.SavedRecipe.t;
       case _ixq4a7a9.SocialPost:
         return _ixq4a7a9.SocialPost.t;
+      case _irjv1u4s.UserFollow:
+        return _irjv1u4s.UserFollow.t;
       case _ir2mn8w1.UserProfile:
         return _ir2mn8w1.UserProfile.t;
     }

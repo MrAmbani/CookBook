@@ -24,6 +24,8 @@ import '../recipies/ingredient_endpoint.dart' as _ibftvyt1;
 import '../recipies/recipe_endpoint.dart' as _i08c4iss;
 import '../recipies/recipe_search_endpoint.dart' as _ie98sf55;
 import '../recipies/saved_recipe_endpoint.dart' as _iknj3c3y;
+import '../social/comment_endpoint.dart' as _i1kq3rxw;
+import '../social/follow_endpoint.dart' as _ilyau7si;
 import '../social/like_endpoint.dart' as _ispil1as;
 import '../social/post_endpoint.dart' as _itlceoes;
 
@@ -83,6 +85,18 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'savedRecipe',
+          null,
+        ),
+      'comment': _i1kq3rxw.CommentEndpoint()
+        ..initialize(
+          server,
+          'comment',
+          null,
+        ),
+      'follow': _ilyau7si.FollowEndpoint()
+        ..initialize(
+          server,
+          'follow',
           null,
         ),
       'like': _ispil1as.LikeEndpoint()
@@ -590,6 +604,119 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         params['recipeId'],
                       ),
+        ),
+      },
+    );
+    connectors['comment'] = _is.EndpointConnector(
+      name: 'comment',
+      endpoint: endpoints['comment']!,
+      methodConnectors: {
+        'getComments': _is.MethodConnector(
+          name: 'getComments',
+          params: {
+            'postId': _is.ParameterDescription(
+              name: 'postId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['comment'] as _i1kq3rxw.CommentEndpoint)
+                  .getComments(
+                    session,
+                    params['postId'],
+                  ),
+        ),
+        'add': _is.MethodConnector(
+          name: 'add',
+          params: {
+            'postId': _is.ParameterDescription(
+              name: 'postId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'text': _is.ParameterDescription(
+              name: 'text',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['comment'] as _i1kq3rxw.CommentEndpoint).add(
+                    session,
+                    postId: params['postId'],
+                    text: params['text'],
+                  ),
+        ),
+        'delete': _is.MethodConnector(
+          name: 'delete',
+          params: {
+            'commentId': _is.ParameterDescription(
+              name: 'commentId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['comment'] as _i1kq3rxw.CommentEndpoint).delete(
+                    session,
+                    params['commentId'],
+                  ),
+        ),
+      },
+    );
+    connectors['follow'] = _is.EndpointConnector(
+      name: 'follow',
+      endpoint: endpoints['follow']!,
+      methodConnectors: {
+        'getUserSummary': _is.MethodConnector(
+          name: 'getUserSummary',
+          params: {
+            'userId': _is.ParameterDescription(
+              name: 'userId',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['follow'] as _ilyau7si.FollowEndpoint)
+                  .getUserSummary(
+                    session,
+                    params['userId'],
+                  ),
+        ),
+        'toggle': _is.MethodConnector(
+          name: 'toggle',
+          params: {
+            'targetUserId': _is.ParameterDescription(
+              name: 'targetUserId',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['follow'] as _ilyau7si.FollowEndpoint).toggle(
+                    session,
+                    params['targetUserId'],
+                  ),
         ),
       },
     );

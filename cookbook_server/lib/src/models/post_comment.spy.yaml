@@ -1,0 +1,13 @@
+class: PostComment
+table: post_comment
+
+fields:
+  postId: int
+  userId: String
+  authorName: String
+  text: String
+  createdAt: DateTime
+
+indexes:
+  post_comment_post_idx:
+    fields: postId

@@ -1,0 +1,12 @@
+class: UserFollow
+table: user_follow
+
+fields:
+  followerId: String
+  followingId: String
+  createdAt: DateTime
+
+indexes:
+  user_follow_unique_idx:
+    fields: followerId, followingId
+    unique: true

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cookbook_client/cookbook_client.dart';
 import '../client.dart';
 import 'create_post_screen.dart';
+import 'comments_screen.dart';
+import 'user_profile_screen.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -54,10 +56,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Future<void> _loadMore() async {
     try {
-      final page = await client.post.getFeed(
-        offset: _items.length,
-        limit: _pageSize,
-      );
+      final page =
+          await client.post.getFeed(offset: _items.length, limit: _pageSize);
       if (!mounted) return;
       setState(() {
         _items.addAll(page);
@@ -125,9 +125,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
   void _showError(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   bool _canDelete(SocialPost post) =>
@@ -171,9 +170,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         final post = item.post;
                         return Card(
                           margin: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
+                              horizontal: 12, vertical: 6),
                           child: Padding(
                             padding: const EdgeInsets.all(12),
                             child: Column(
@@ -182,10 +179,21 @@ class _FeedScreenState extends State<FeedScreen> {
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: Text(
-                                        post.authorName,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: InkWell(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => UserProfileScreen(
+                                                  userId: post.userId),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            post.authorName,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -197,14 +205,12 @@ class _FeedScreenState extends State<FeedScreen> {
                                   ],
                                 ),
                                 Text(
-                                  post.createdAt.toLocal().toString().substring(
-                                    0,
-                                    16,
-                                  ),
+                                  post.createdAt
+                                      .toLocal()
+                                      .toString()
+                                      .substring(0, 16),
                                   style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                  ),
+                                      color: Colors.grey, fontSize: 12),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(post.caption),
@@ -223,6 +229,16 @@ class _FeedScreenState extends State<FeedScreen> {
                                       onPressed: () => _toggleLike(item),
                                     ),
                                     Text('${item.likeCount}'),
+                                    IconButton(
+                                      icon: const Icon(Icons.comment_outlined),
+                                      onPressed: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              CommentsScreen(postId: post.id!),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],
