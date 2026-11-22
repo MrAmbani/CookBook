@@ -42,17 +42,20 @@ class _SavedRecipesScreenState extends State<SavedRecipesScreen> {
           }
           return ListView(
             children: recipes
-                .map((r) => ListTile(
-                      title: Text(r.title),
-                      subtitle: Text(
-                          '${r.prepTime + r.cookTime} min · ${r.difficulty}'),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => RecipeDetailsScreen(recipeId: r.id!),
-                        ),
-                      ).then((_) => _reload()),
-                    ))
+                .map(
+                  (r) => ListTile(
+                    title: Text(r.title),
+                    subtitle: Text(
+                      '${r.prepTime + r.cookTime} min · ${r.difficulty}',
+                    ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => RecipeDetailsScreen(recipeId: r.id!),
+                      ),
+                    ).then((_) => _reload()),
+                  ),
+                )
                 .toList(),
           );
         },

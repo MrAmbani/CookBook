@@ -21,7 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.initState();
     _controller = EmailAuthController(
       client: client,
-      startScreen: EmailFlowScreen.startRegistration,  
+      startScreen: EmailFlowScreen.startRegistration,
       onAuthenticated: () {
         if (!mounted) return;
         Navigator.pushReplacement(
@@ -69,7 +69,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context, codeController.text.trim()),
+              onPressed: () =>
+                  Navigator.pop(context, codeController.text.trim()),
               child: const Text('Submit'),
             ),
           ],

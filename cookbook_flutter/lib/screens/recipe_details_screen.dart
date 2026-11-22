@@ -89,17 +89,25 @@ class _RecipeDetailsScreenState extends State<RecipeDetailsScreen> {
             ),
           ],
           const SizedBox(height: 16),
-          const Text('Ingredients', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            'Ingredients',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
-          ...ingredients.map((i) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Text(
-                  '• ${i.quantity}${i.unit != null ? ' ${i.unit}' : ''} ${i.ingredientName}'
-                  '${i.isOptional ? ' (optional)' : ''}',
-                ),
-              )),
+          ...ingredients.map(
+            (i) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Text(
+                '• ${i.quantity}${i.unit != null ? ' ${i.unit}' : ''} ${i.ingredientName}'
+                '${i.isOptional ? ' (optional)' : ''}',
+              ),
+            ),
+          ),
           const SizedBox(height: 16),
-          const Text('Steps', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            'Steps',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 8),
           Text(recipe.instructions),
         ],

@@ -61,18 +61,21 @@ class _SearchScreenState extends State<SearchScreen> {
               Expanded(
                 child: ListView(
                   children: results
-                      .map((r) => ListTile(
-                            title: Text(r.title),
-                            subtitle: Text(
-                                '${r.prepTime + r.cookTime} min · ${r.difficulty}'),
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    RecipeDetailsScreen(recipeId: r.id!),
-                              ),
+                      .map(
+                        (r) => ListTile(
+                          title: Text(r.title),
+                          subtitle: Text(
+                            '${r.prepTime + r.cookTime} min · ${r.difficulty}',
+                          ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  RecipeDetailsScreen(recipeId: r.id!),
                             ),
-                          ))
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
               ),

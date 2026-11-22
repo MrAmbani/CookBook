@@ -72,9 +72,11 @@ class _RecipeResultsScreenState extends State<RecipeResultsScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.auto_awesome),
-                  label: Text(_generating
-                      ? 'Generating...'
-                      : 'No good match? Generate a recipe with AI'),
+                  label: Text(
+                    _generating
+                        ? 'Generating...'
+                        : 'No good match? Generate a recipe with AI',
+                  ),
                 ),
               ),
             ),
@@ -88,13 +90,16 @@ class _RecipeResultsScreenState extends State<RecipeResultsScreen> {
                       final percent = (match.score * 100).round();
                       return Card(
                         margin: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         child: InkWell(
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (_) => RecipeDetailsScreen(
-                                  recipeId: match.recipe.id!),
+                                recipeId: match.recipe.id!,
+                              ),
                             ),
                           ),
                           child: Padding(
@@ -105,18 +110,21 @@ class _RecipeResultsScreenState extends State<RecipeResultsScreen> {
                                 Text(
                                   match.recipe.title,
                                   style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                    '$percent% match · ${match.recipe.prepTime + match.recipe.cookTime} min · ${match.recipe.difficulty}'),
+                                  '$percent% match · ${match.recipe.prepTime + match.recipe.cookTime} min · ${match.recipe.difficulty}',
+                                ),
                                 if (match.missingIngredients.isNotEmpty) ...[
                                   const SizedBox(height: 4),
                                   Text(
                                     'Missing: ${match.missingIngredients.join(", ")}',
-                                    style:
-                                        const TextStyle(color: Colors.orange),
+                                    style: const TextStyle(
+                                      color: Colors.orange,
+                                    ),
                                   ),
                                 ],
                               ],

@@ -32,7 +32,9 @@ class _IngredientInputScreenState extends State<IngredientInputScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cannot reach the server. Is it running?')),
+        const SnackBar(
+          content: Text('Cannot reach the server. Is it running?'),
+        ),
       );
     }
   }
@@ -112,10 +114,12 @@ class _IngredientInputScreenState extends State<IngredientInputScreen> {
               Wrap(
                 spacing: 8,
                 children: _recognized
-                    .map((i) => Chip(
-                          label: Text(i),
-                          onDeleted: () => _removeRecognized(i),
-                        ))
+                    .map(
+                      (i) => Chip(
+                        label: Text(i),
+                        onDeleted: () => _removeRecognized(i),
+                      ),
+                    )
                     .toList(),
               ),
               const SizedBox(height: 12),
@@ -134,15 +138,17 @@ class _IngredientInputScreenState extends State<IngredientInputScreen> {
               Wrap(
                 spacing: 8,
                 children: _unrecognized
-                    .map((i) => ActionChip(
-                          label: Text(i),
-                          backgroundColor: Colors.orange.shade100,
-                          onPressed: () => _keepUnrecognizedAnyway(i),
-                          avatar: GestureDetector(
-                            onTap: () => _removeUnrecognized(i),
-                            child: const Icon(Icons.close, size: 16),
-                          ),
-                        ))
+                    .map(
+                      (i) => ActionChip(
+                        label: Text(i),
+                        backgroundColor: Colors.orange.shade100,
+                        onPressed: () => _keepUnrecognizedAnyway(i),
+                        avatar: GestureDetector(
+                          onTap: () => _removeUnrecognized(i),
+                          child: const Icon(Icons.close, size: 16),
+                        ),
+                      ),
+                    )
                     .toList(),
               ),
             ],
