@@ -1,0 +1,12 @@
+class: PostLike
+table: post_like
+
+fields:
+  userId: String
+  postId: int
+  createdAt: DateTime
+
+indexes:
+  post_like_unique_idx:
+    fields: userId, postId
+    unique: true

@@ -11,6 +11,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _ida;
+import 'package:cookbook_client/src/protocol/feed_item.dart' as _ifq0pwto;
 import 'package:cookbook_client/src/protocol/greetings/greeting.dart'
     as _ipvxrsk2;
 import 'package:cookbook_client/src/protocol/normalized_ingredients.dart'
@@ -427,17 +428,34 @@ class EndpointSavedRecipe extends _isc.EndpointRef {
 }
 
 /// {@category Endpoint}
+class EndpointLike extends _isc.EndpointRef {
+  EndpointLike(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'like';
+
+  /// Likes the post if you haven't, unlikes it if you have.
+  /// Returns true if the post is now liked by you.
+  _ida.Future<bool> toggle(int postId) => caller.callServerEndpoint<bool>(
+    'like',
+    'toggle',
+    {'postId': postId},
+  );
+}
+
+/// {@category Endpoint}
 class EndpointPost extends _isc.EndpointRef {
   EndpointPost(_isc.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'post';
 
-  /// Newest posts first. Anyone, including guests, can read the feed.
-  _ida.Future<List<_iid4axvy.SocialPost>> getFeed({
+  /// Newest posts first, each with its like count and whether the caller
+  /// has liked it. Anyone, including guests, can read the feed.
+  _ida.Future<List<_ifq0pwto.FeedItem>> getFeed({
     required int offset,
     required int limit,
-  }) => caller.callServerEndpoint<List<_iid4axvy.SocialPost>>(
+  }) => caller.callServerEndpoint<List<_ifq0pwto.FeedItem>>(
     'post',
     'getFeed',
     {
@@ -514,6 +532,7 @@ class Client extends _isc.ServerpodClientShared {
     recipe = EndpointRecipe(this);
     recipeSearch = EndpointRecipeSearch(this);
     savedRecipe = EndpointSavedRecipe(this);
+    like = EndpointLike(this);
     post = EndpointPost(this);
     modules = Modules(this);
   }
@@ -536,6 +555,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointSavedRecipe savedRecipe;
 
+  late final EndpointLike like;
+
   late final EndpointPost post;
 
   late final Modules modules;
@@ -551,6 +572,7 @@ class Client extends _isc.ServerpodClientShared {
     'recipe': recipe,
     'recipeSearch': recipeSearch,
     'savedRecipe': savedRecipe,
+    'like': like,
     'post': post,
   };
 

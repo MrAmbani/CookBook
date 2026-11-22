@@ -29,6 +29,8 @@ savedRecipe:
   - unsave:
   - getSaved:
   - isSaved:
+like:
+  - toggle:
 post:
   - getFeed:
   - createPost:

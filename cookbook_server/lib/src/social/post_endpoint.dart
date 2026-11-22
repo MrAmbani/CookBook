@@ -2,18 +2,36 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
 class PostEndpoint extends Endpoint {
-  /// Newest posts first. Anyone, including guests, can read the feed.
-  Future<List<SocialPost>> getFeed(
+  /// Newest posts first, each with its like count and whether the caller
+  /// has liked it. Anyone, including guests, can read the feed.
+  Future<List<FeedItem>> getFeed(
     Session session, {
     required int offset,
     required int limit,
   }) async {
-    return await SocialPost.db.find(
+    final posts = await SocialPost.db.find(
       session,
       orderBy: (t) => t.createdAt.desc(),
       offset: offset,
       limit: limit,
     );
+    if (posts.isEmpty) return [];
+
+    final ids = posts.map((p) => p.id!).toSet();
+    final likes = await PostLike.db.find(
+      session,
+      where: (t) => t.postId.inSet(ids),
+    );
+    final me = session.authenticated?.userIdentifier;
+
+    return posts.map((p) {
+      final postLikes = likes.where((l) => l.postId == p.id).toList();
+      return FeedItem(
+        post: p,
+        likeCount: postLikes.length,
+        likedByMe: me != null && postLikes.any((l) => l.userId == me),
+      );
+    }).toList();
   }
 
   Future<SocialPost> createPost(
@@ -63,6 +81,12 @@ class PostEndpoint extends Endpoint {
     if (post.userId != userId && !isAdmin) {
       throw Exception('Not allowed to delete this post');
     }
+
+    // Remove the post's likes first so no orphan rows are left behind.
+    await PostLike.db.deleteWhere(
+      session,
+      where: (t) => t.postId.equals(postId),
+    );
     await SocialPost.db.deleteRow(session, post);
   }
 }

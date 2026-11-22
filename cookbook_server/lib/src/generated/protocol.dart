@@ -11,18 +11,20 @@
 // ignore_for_file: dead_code, unnecessary_type_check
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:cookbook_server/src/generated/feed_item.dart' as _ir4kknam;
 import 'package:cookbook_server/src/generated/recipe.dart' as _iiy2wcna;
 import 'package:cookbook_server/src/generated/recipe_match.dart' as _i1aylshw;
-import 'package:cookbook_server/src/generated/social_post.dart' as _i5o1a7ak;
 import 'package:serverpod/protocol.dart' as _isp;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
+import 'feed_item.dart' as _ionihcdq;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'ingrediants.dart' as _i9otnek0;
 import 'normalized_ingredients.dart' as _imncc5ah;
+import 'post_like.dart' as _i2v49lle;
 import 'recipe.dart' as _ixmlxsuh;
 import 'recipe_details.dart' as _isbyitoy;
 import 'recipe_ingrediants.dart' as _i2urvore;
@@ -31,9 +33,11 @@ import 'recipe_match.dart' as _ijym6e17;
 import 'saved_recipe.dart' as _igrf4bz7;
 import 'social_post.dart' as _ixq4a7a9;
 import 'user_profile.dart' as _ir2mn8w1;
+export 'feed_item.dart';
 export 'greetings/greeting.dart';
 export 'ingrediants.dart';
 export 'normalized_ingredients.dart';
+export 'post_like.dart';
 export 'recipe.dart';
 export 'recipe_details.dart';
 export 'recipe_ingrediants.dart';
@@ -85,6 +89,60 @@ class Protocol extends _is.DatabaseSerializationManager {
       ],
       foreignKeys: [],
       indexes: [],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'post_like',
+      dartName: 'PostLike',
+      schema: 'public',
+      module: 'cookbook',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'userId',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'postId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _isp.IndexDefinition(
+          indexName: 'post_like_unique_idx',
+          tableSpace: null,
+          elements: [
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'postId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
       managed: true,
     ),
     _isp.TableDefinition(
@@ -377,6 +435,9 @@ class Protocol extends _is.DatabaseSerializationManager {
       }
     }
 
+    if (t == _ionihcdq.FeedItem) {
+      return _ionihcdq.FeedItem.fromJson(data) as T;
+    }
     if (t == _izw8z7ou.Greeting) {
       return _izw8z7ou.Greeting.fromJson(data) as T;
     }
@@ -385,6 +446,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _imncc5ah.NormalizedIngredients) {
       return _imncc5ah.NormalizedIngredients.fromJson(data) as T;
+    }
+    if (t == _i2v49lle.PostLike) {
+      return _i2v49lle.PostLike.fromJson(data) as T;
     }
     if (t == _ixmlxsuh.Recipe) {
       return _ixmlxsuh.Recipe.fromJson(data) as T;
@@ -410,6 +474,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _ir2mn8w1.UserProfile) {
       return _ir2mn8w1.UserProfile.fromJson(data) as T;
     }
+    if (t == _is.getType<_ionihcdq.FeedItem?>()) {
+      return (data != null ? _ionihcdq.FeedItem.fromJson(data) : null) as T;
+    }
     if (t == _is.getType<_izw8z7ou.Greeting?>()) {
       return (data != null ? _izw8z7ou.Greeting.fromJson(data) : null) as T;
     }
@@ -421,6 +488,9 @@ class Protocol extends _is.DatabaseSerializationManager {
               ? _imncc5ah.NormalizedIngredients.fromJson(data)
               : null)
           as T;
+    }
+    if (t == _is.getType<_i2v49lle.PostLike?>()) {
+      return (data != null ? _i2v49lle.PostLike.fromJson(data) : null) as T;
     }
     if (t == _is.getType<_ixmlxsuh.Recipe?>()) {
       return (data != null ? _ixmlxsuh.Recipe.fromJson(data) : null) as T;
@@ -475,9 +545,9 @@ class Protocol extends _is.DatabaseSerializationManager {
               .toList()
           as T;
     }
-    if (t == List<_i5o1a7ak.SocialPost>) {
+    if (t == List<_ir4kknam.FeedItem>) {
       return (data as List)
-              .map((e) => deserialize<_i5o1a7ak.SocialPost>(e))
+              .map((e) => deserialize<_ir4kknam.FeedItem>(e))
               .toList()
           as T;
     }
@@ -495,9 +565,11 @@ class Protocol extends _is.DatabaseSerializationManager {
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
+      _ionihcdq.FeedItem => 'FeedItem',
       _izw8z7ou.Greeting => 'Greeting',
       _i9otnek0.Ingredient => 'Ingredient',
       _imncc5ah.NormalizedIngredients => 'NormalizedIngredients',
+      _i2v49lle.PostLike => 'PostLike',
       _ixmlxsuh.Recipe => 'Recipe',
       _isbyitoy.RecipeDetails => 'RecipeDetails',
       _i2urvore.RecipeIngredient => 'RecipeIngredient',
@@ -520,12 +592,16 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
 
     switch (data) {
+      case _ionihcdq.FeedItem():
+        return 'FeedItem';
       case _izw8z7ou.Greeting():
         return 'Greeting';
       case _i9otnek0.Ingredient():
         return 'Ingredient';
       case _imncc5ah.NormalizedIngredients():
         return 'NormalizedIngredients';
+      case _i2v49lle.PostLike():
+        return 'PostLike';
       case _ixmlxsuh.Recipe():
         return 'Recipe';
       case _isbyitoy.RecipeDetails():
@@ -568,6 +644,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
+    if (dataClassName == 'FeedItem') {
+      return deserialize<_ionihcdq.FeedItem>(data['data']);
+    }
     if (dataClassName == 'Greeting') {
       return deserialize<_izw8z7ou.Greeting>(data['data']);
     }
@@ -576,6 +655,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'NormalizedIngredients') {
       return deserialize<_imncc5ah.NormalizedIngredients>(data['data']);
+    }
+    if (dataClassName == 'PostLike') {
+      return deserialize<_i2v49lle.PostLike>(data['data']);
     }
     if (dataClassName == 'Recipe') {
       return deserialize<_ixmlxsuh.Recipe>(data['data']);
@@ -644,6 +726,8 @@ class Protocol extends _is.DatabaseSerializationManager {
     switch (t) {
       case _i9otnek0.Ingredient:
         return _i9otnek0.Ingredient.t;
+      case _i2v49lle.PostLike:
+        return _i2v49lle.PostLike.t;
       case _ixmlxsuh.Recipe:
         return _ixmlxsuh.Recipe.t;
       case _i2urvore.RecipeIngredient:

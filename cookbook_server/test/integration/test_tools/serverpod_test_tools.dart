@@ -13,6 +13,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _ida;
 import 'dart:io' as _idi;
+import 'package:cookbook_server/src/generated/feed_item.dart' as _ir4kknam;
 import 'package:cookbook_server/src/generated/greetings/greeting.dart'
     as _ist8xn37;
 import 'package:cookbook_server/src/generated/normalized_ingredients.dart'
@@ -172,6 +173,8 @@ class TestEndpoints {
 
   late final _SavedRecipeEndpoint savedRecipe;
 
+  late final _LikeEndpoint like;
+
   late final _PostEndpoint post;
 }
 
@@ -215,6 +218,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     savedRecipe = _SavedRecipeEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    like = _LikeEndpoint(
       endpoints,
       serializationManager,
     );
@@ -1033,6 +1040,48 @@ class _SavedRecipeEndpoint {
   }
 }
 
+class _LikeEndpoint {
+  _LikeEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<bool> toggle(
+    _ist.TestSessionBuilder sessionBuilder,
+    int postId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'like',
+            method: 'toggle',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'like',
+          methodName: 'toggle',
+          parameters: _ist.testObjectToJson({'postId': postId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<bool>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
 class _PostEndpoint {
   _PostEndpoint(
     this._endpointDispatch,
@@ -1043,7 +1092,7 @@ class _PostEndpoint {
 
   final _is.SerializationManager _serializationManager;
 
-  _ida.Future<List<_i5o1a7ak.SocialPost>> getFeed(
+  _ida.Future<List<_ir4kknam.FeedItem>> getFeed(
     _ist.TestSessionBuilder sessionBuilder, {
     required int offset,
     required int limit,
@@ -1070,7 +1119,7 @@ class _PostEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _ida.Future<List<_i5o1a7ak.SocialPost>>);
+                as _ida.Future<List<_ir4kknam.FeedItem>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

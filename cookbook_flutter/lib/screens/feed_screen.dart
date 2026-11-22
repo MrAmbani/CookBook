@@ -12,7 +12,7 @@ class FeedScreen extends StatefulWidget {
 
 class _FeedScreenState extends State<FeedScreen> {
   static const _pageSize = 20;
-  final List<SocialPost> _posts = [];
+  final List<FeedItem> _items = [];
   UserProfile? _me; // null for guests
   bool _loading = true;
   bool _hasMore = false;
@@ -30,7 +30,7 @@ class _FeedScreenState extends State<FeedScreen> {
       if (!mounted) return;
       setState(() => _me = me);
     } catch (_) {
-      // Guest: no delete buttons.
+      // Guest: no delete buttons, likes ask to log in.
     }
   }
 
@@ -40,7 +40,7 @@ class _FeedScreenState extends State<FeedScreen> {
       final page = await client.post.getFeed(offset: 0, limit: _pageSize);
       if (!mounted) return;
       setState(() {
-        _posts
+        _items
           ..clear()
           ..addAll(page);
         _hasMore = page.length == _pageSize;
@@ -55,14 +55,31 @@ class _FeedScreenState extends State<FeedScreen> {
   Future<void> _loadMore() async {
     try {
       final page =
-          await client.post.getFeed(offset: _posts.length, limit: _pageSize);
+          await client.post.getFeed(offset: _items.length, limit: _pageSize);
       if (!mounted) return;
       setState(() {
-        _posts.addAll(page);
+        _items.addAll(page);
         _hasMore = page.length == _pageSize;
       });
     } catch (e) {
       _showError('Could not load more: $e');
+    }
+  }
+
+  Future<void> _toggleLike(FeedItem item) async {
+    if (_me == null) {
+      _showError('Log in to like posts');
+      return;
+    }
+    try {
+      final liked = await client.like.toggle(item.post.id!);
+      if (!mounted) return;
+      setState(() {
+        item.likedByMe = liked;
+        item.likeCount += liked ? 1 : -1;
+      });
+    } catch (e) {
+      _showError('Could not update like: $e');
     }
   }
 
@@ -91,14 +108,14 @@ class _FeedScreenState extends State<FeedScreen> {
     return confirmed == true;
   }
 
-  Future<void> _delete(SocialPost post) async {
+  Future<void> _delete(FeedItem item) async {
     final confirmed = await _confirmDelete();
     if (!confirmed) return;
 
     try {
-      await client.post.deletePost(post.id!);
+      await client.post.deletePost(item.post.id!);
       if (!mounted) return;
-      setState(() => _posts.remove(post));
+      setState(() => _items.remove(item));
     } catch (e) {
       _showError('Could not delete: $e');
     }
@@ -127,11 +144,11 @@ class _FeedScreenState extends State<FeedScreen> {
           if (posted == true) _refresh();
         },
       ),
-      body: _loading && _posts.isEmpty
+      body: _loading && _items.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: _refresh,
-              child: _posts.isEmpty
+              child: _items.isEmpty
                   ? ListView(
                       children: const [
                         SizedBox(height: 120),
@@ -139,15 +156,16 @@ class _FeedScreenState extends State<FeedScreen> {
                       ],
                     )
                   : ListView.builder(
-                      itemCount: _posts.length + (_hasMore ? 1 : 0),
+                      itemCount: _items.length + (_hasMore ? 1 : 0),
                       itemBuilder: (context, i) {
-                        if (i == _posts.length) {
+                        if (i == _items.length) {
                           return TextButton(
                             onPressed: _loadMore,
                             child: const Text('Load more'),
                           );
                         }
-                        final post = _posts[i];
+                        final item = _items[i];
+                        final post = item.post;
                         return Card(
                           margin: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 6),
@@ -168,7 +186,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                     if (_canDelete(post))
                                       IconButton(
                                         icon: const Icon(Icons.delete_outline),
-                                        onPressed: () => _delete(post),
+                                        onPressed: () => _delete(item),
                                       ),
                                   ],
                                 ),
@@ -182,6 +200,23 @@ class _FeedScreenState extends State<FeedScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(post.caption),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        item.likedByMe
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: item.likedByMe
+                                            ? Colors.red
+                                            : null,
+                                      ),
+                                      onPressed: () => _toggleLike(item),
+                                    ),
+                                    Text('${item.likeCount}'),
+                                  ],
+                                ),
                               ],
                             ),
                           ),

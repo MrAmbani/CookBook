@@ -1,0 +1,6 @@
+class: FeedItem
+
+fields:
+  post: SocialPost
+  likeCount: int
+  likedByMe: bool

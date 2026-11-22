@@ -24,6 +24,7 @@ import '../recipies/ingredient_endpoint.dart' as _ibftvyt1;
 import '../recipies/recipe_endpoint.dart' as _i08c4iss;
 import '../recipies/recipe_search_endpoint.dart' as _ie98sf55;
 import '../recipies/saved_recipe_endpoint.dart' as _iknj3c3y;
+import '../social/like_endpoint.dart' as _ispil1as;
 import '../social/post_endpoint.dart' as _itlceoes;
 
 class Endpoints extends _is.EndpointDispatch {
@@ -82,6 +83,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'savedRecipe',
+          null,
+        ),
+      'like': _ispil1as.LikeEndpoint()
+        ..initialize(
+          server,
+          'like',
           null,
         ),
       'post': _itlceoes.PostEndpoint()
@@ -583,6 +590,30 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         params['recipeId'],
                       ),
+        ),
+      },
+    );
+    connectors['like'] = _is.EndpointConnector(
+      name: 'like',
+      endpoint: endpoints['like']!,
+      methodConnectors: {
+        'toggle': _is.MethodConnector(
+          name: 'toggle',
+          params: {
+            'postId': _is.ParameterDescription(
+              name: 'postId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['like'] as _ispil1as.LikeEndpoint).toggle(
+                session,
+                params['postId'],
+              ),
         ),
       },
     );
