@@ -1,0 +1,19 @@
+class: PostReport
+table: post_report
+
+fields:
+  postId: int
+  postAuthorId: String
+  postAuthorName: String
+  postCaption: String
+  reporterId: String
+  reason: String
+  status: String
+  createdAt: DateTime
+  reviewedBy: String?
+  reviewedAt: DateTime?
+
+indexes:
+  post_report_unique_idx:
+    fields: reporterId, postId
+    unique: true

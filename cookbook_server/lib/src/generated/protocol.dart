@@ -13,6 +13,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:cookbook_server/src/generated/feed_item.dart' as _ir4kknam;
 import 'package:cookbook_server/src/generated/post_comment.dart' as _i48c7e7q;
+import 'package:cookbook_server/src/generated/post_report.dart' as _i0dhjyhu;
 import 'package:cookbook_server/src/generated/recipe.dart' as _iiy2wcna;
 import 'package:cookbook_server/src/generated/recipe_match.dart' as _i1aylshw;
 import 'package:serverpod/protocol.dart' as _isp;
@@ -27,6 +28,7 @@ import 'ingrediants.dart' as _i9otnek0;
 import 'normalized_ingredients.dart' as _imncc5ah;
 import 'post_comment.dart' as _imkhylta;
 import 'post_like.dart' as _i2v49lle;
+import 'post_report.dart' as _ivtjxqnn;
 import 'recipe.dart' as _ixmlxsuh;
 import 'recipe_details.dart' as _isbyitoy;
 import 'recipe_ingrediants.dart' as _i2urvore;
@@ -43,6 +45,7 @@ export 'ingrediants.dart';
 export 'normalized_ingredients.dart';
 export 'post_comment.dart';
 export 'post_like.dart';
+export 'post_report.dart';
 export 'recipe.dart';
 export 'recipe_details.dart';
 export 'recipe_ingrediants.dart';
@@ -201,6 +204,102 @@ class Protocol extends _is.DatabaseSerializationManager {
             _isp.IndexElementDefinition(
               type: _isp.IndexElementDefinitionType.column,
               definition: 'userId',
+            ),
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'postId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'post_report',
+      dartName: 'PostReport',
+      schema: 'public',
+      module: 'cookbook',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'postId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'postAuthorId',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'postAuthorName',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'postCaption',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'reporterId',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'reason',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'status',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _isp.ColumnDefinition(
+          name: 'reviewedBy',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'reviewedAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _isp.IndexDefinition(
+          indexName: 'post_report_unique_idx',
+          tableSpace: null,
+          elements: [
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'reporterId',
             ),
             _isp.IndexElementDefinition(
               type: _isp.IndexElementDefinitionType.column,
@@ -576,6 +675,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _i2v49lle.PostLike) {
       return _i2v49lle.PostLike.fromJson(data) as T;
     }
+    if (t == _ivtjxqnn.PostReport) {
+      return _ivtjxqnn.PostReport.fromJson(data) as T;
+    }
     if (t == _ixmlxsuh.Recipe) {
       return _ixmlxsuh.Recipe.fromJson(data) as T;
     }
@@ -626,6 +728,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _is.getType<_i2v49lle.PostLike?>()) {
       return (data != null ? _i2v49lle.PostLike.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_ivtjxqnn.PostReport?>()) {
+      return (data != null ? _ivtjxqnn.PostReport.fromJson(data) : null) as T;
     }
     if (t == _is.getType<_ixmlxsuh.Recipe?>()) {
       return (data != null ? _ixmlxsuh.Recipe.fromJson(data) : null) as T;
@@ -698,6 +803,12 @@ class Protocol extends _is.DatabaseSerializationManager {
               .toList()
           as T;
     }
+    if (t == List<_i0dhjyhu.PostReport>) {
+      return (data as List)
+              .map((e) => deserialize<_i0dhjyhu.PostReport>(e))
+              .toList()
+          as T;
+    }
     try {
       return _iais.Protocol().deserialize<T>(data, t);
     } on _is.DeserializationTypeNotFoundException catch (_) {}
@@ -718,6 +829,7 @@ class Protocol extends _is.DatabaseSerializationManager {
       _imncc5ah.NormalizedIngredients => 'NormalizedIngredients',
       _imkhylta.PostComment => 'PostComment',
       _i2v49lle.PostLike => 'PostLike',
+      _ivtjxqnn.PostReport => 'PostReport',
       _ixmlxsuh.Recipe => 'Recipe',
       _isbyitoy.RecipeDetails => 'RecipeDetails',
       _i2urvore.RecipeIngredient => 'RecipeIngredient',
@@ -754,6 +866,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'PostComment';
       case _i2v49lle.PostLike():
         return 'PostLike';
+      case _ivtjxqnn.PostReport():
+        return 'PostReport';
       case _ixmlxsuh.Recipe():
         return 'Recipe';
       case _isbyitoy.RecipeDetails():
@@ -817,6 +931,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'PostLike') {
       return deserialize<_i2v49lle.PostLike>(data['data']);
+    }
+    if (dataClassName == 'PostReport') {
+      return deserialize<_ivtjxqnn.PostReport>(data['data']);
     }
     if (dataClassName == 'Recipe') {
       return deserialize<_ixmlxsuh.Recipe>(data['data']);
@@ -895,6 +1012,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return _imkhylta.PostComment.t;
       case _i2v49lle.PostLike:
         return _i2v49lle.PostLike.t;
+      case _ivtjxqnn.PostReport:
+        return _ivtjxqnn.PostReport.t;
       case _ixmlxsuh.Recipe:
         return _ixmlxsuh.Recipe.t;
       case _i2urvore.RecipeIngredient:

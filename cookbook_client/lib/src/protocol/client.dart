@@ -17,6 +17,7 @@ import 'package:cookbook_client/src/protocol/greetings/greeting.dart'
 import 'package:cookbook_client/src/protocol/normalized_ingredients.dart'
     as _iqjhkawc;
 import 'package:cookbook_client/src/protocol/post_comment.dart' as _itl7hg3m;
+import 'package:cookbook_client/src/protocol/post_report.dart' as _inkmoqde;
 import 'package:cookbook_client/src/protocol/recipe.dart' as _ipe9xyte;
 import 'package:cookbook_client/src/protocol/recipe_details.dart' as _ircsygfi;
 import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
@@ -548,6 +549,48 @@ class EndpointPost extends _isc.EndpointRef {
   );
 }
 
+/// {@category Endpoint}
+class EndpointReport extends _isc.EndpointRef {
+  EndpointReport(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'report';
+
+  /// Any logged-in user can report someone else's post, once.
+  _ida.Future<void> reportPost({
+    required int postId,
+    required String reason,
+  }) => caller.callServerEndpoint<void>(
+    'report',
+    'reportPost',
+    {
+      'postId': postId,
+      'reason': reason,
+    },
+  );
+
+  /// Admin only. Newest pending reports first.
+  _ida.Future<List<_inkmoqde.PostReport>> listPending() =>
+      caller.callServerEndpoint<List<_inkmoqde.PostReport>>(
+        'report',
+        'listPending',
+        {},
+      );
+
+  /// Admin only. action is 'dismiss' or 'remove'.
+  _ida.Future<void> resolve({
+    required int reportId,
+    required String action,
+  }) => caller.callServerEndpoint<void>(
+    'report',
+    'resolve',
+    {
+      'reportId': reportId,
+      'action': action,
+    },
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _iaic.Caller(client);
@@ -599,6 +642,7 @@ class Client extends _isc.ServerpodClientShared {
     follow = EndpointFollow(this);
     like = EndpointLike(this);
     post = EndpointPost(this);
+    report = EndpointReport(this);
     modules = Modules(this);
   }
 
@@ -628,6 +672,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointPost post;
 
+  late final EndpointReport report;
+
   late final Modules modules;
 
   @override
@@ -645,6 +691,7 @@ class Client extends _isc.ServerpodClientShared {
     'follow': follow,
     'like': like,
     'post': post,
+    'report': report,
   };
 
   @override

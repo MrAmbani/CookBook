@@ -19,6 +19,7 @@ import 'package:cookbook_server/src/generated/greetings/greeting.dart'
 import 'package:cookbook_server/src/generated/normalized_ingredients.dart'
     as _iowvcxju;
 import 'package:cookbook_server/src/generated/post_comment.dart' as _i48c7e7q;
+import 'package:cookbook_server/src/generated/post_report.dart' as _i0dhjyhu;
 import 'package:cookbook_server/src/generated/recipe.dart' as _iiy2wcna;
 import 'package:cookbook_server/src/generated/recipe_details.dart' as _isk4v94r;
 import 'package:cookbook_server/src/generated/recipe_match.dart' as _i1aylshw;
@@ -182,6 +183,8 @@ class TestEndpoints {
   late final _LikeEndpoint like;
 
   late final _PostEndpoint post;
+
+  late final _ReportEndpoint report;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -240,6 +243,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     post = _PostEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    report = _ReportEndpoint(
       endpoints,
       serializationManager,
     );
@@ -1373,6 +1380,117 @@ class _PostEndpoint {
           endpointPath: 'post',
           methodName: 'deletePost',
           parameters: _ist.testObjectToJson({'postId': postId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _ReportEndpoint {
+  _ReportEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<void> reportPost(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int postId,
+    required String reason,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'report',
+            method: 'reportPost',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'report',
+          methodName: 'reportPost',
+          parameters: _ist.testObjectToJson({
+            'postId': postId,
+            'reason': reason,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<List<_i0dhjyhu.PostReport>> listPending(
+    _ist.TestSessionBuilder sessionBuilder,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'report',
+            method: 'listPending',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'report',
+          methodName: 'listPending',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<List<_i0dhjyhu.PostReport>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<void> resolve(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required int reportId,
+    required String action,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'report',
+            method: 'resolve',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'report',
+          methodName: 'resolve',
+          parameters: _ist.testObjectToJson({
+            'reportId': reportId,
+            'action': action,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =

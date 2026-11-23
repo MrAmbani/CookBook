@@ -9,6 +9,7 @@ import 'search_screen.dart';
 import 'saved_recipes_screen.dart';
 import 'feed_screen.dart';
 import 'user_profile_screen.dart';
+import 'admin_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -153,6 +154,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 _menuButton(Icons.bookmark, 'Saved Recipes',
                     () => const SavedRecipesScreen()),
                 _menuButton(Icons.forum, 'Community', () => const FeedScreen()),
+                if (role == 'admin')
+                  _menuButton(Icons.admin_panel_settings, 'Admin Panel',
+                      () => const AdminScreen()),
               ],
             ),
     );

@@ -13,6 +13,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:cookbook_client/src/protocol/feed_item.dart' as _ifq0pwto;
 import 'package:cookbook_client/src/protocol/post_comment.dart' as _itl7hg3m;
+import 'package:cookbook_client/src/protocol/post_report.dart' as _inkmoqde;
 import 'package:cookbook_client/src/protocol/recipe.dart' as _ipe9xyte;
 import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
@@ -26,6 +27,7 @@ import 'ingrediants.dart' as _i9otnek0;
 import 'normalized_ingredients.dart' as _imncc5ah;
 import 'post_comment.dart' as _imkhylta;
 import 'post_like.dart' as _i2v49lle;
+import 'post_report.dart' as _ivtjxqnn;
 import 'recipe.dart' as _ixmlxsuh;
 import 'recipe_details.dart' as _isbyitoy;
 import 'recipe_ingrediants.dart' as _i2urvore;
@@ -42,6 +44,7 @@ export 'ingrediants.dart';
 export 'normalized_ingredients.dart';
 export 'post_comment.dart';
 export 'post_like.dart';
+export 'post_report.dart';
 export 'recipe.dart';
 export 'recipe_details.dart';
 export 'recipe_ingrediants.dart';
@@ -106,6 +109,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _i2v49lle.PostLike) {
       return _i2v49lle.PostLike.fromJson(data) as T;
     }
+    if (t == _ivtjxqnn.PostReport) {
+      return _ivtjxqnn.PostReport.fromJson(data) as T;
+    }
     if (t == _ixmlxsuh.Recipe) {
       return _ixmlxsuh.Recipe.fromJson(data) as T;
     }
@@ -156,6 +162,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _isc.getType<_i2v49lle.PostLike?>()) {
       return (data != null ? _i2v49lle.PostLike.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_ivtjxqnn.PostReport?>()) {
+      return (data != null ? _ivtjxqnn.PostReport.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_ixmlxsuh.Recipe?>()) {
       return (data != null ? _ixmlxsuh.Recipe.fromJson(data) : null) as T;
@@ -228,6 +237,12 @@ class Protocol extends _isc.SerializationManager {
               .toList()
           as T;
     }
+    if (t == List<_inkmoqde.PostReport>) {
+      return (data as List)
+              .map((e) => deserialize<_inkmoqde.PostReport>(e))
+              .toList()
+          as T;
+    }
     try {
       return _iaic.Protocol().deserialize<T>(data, t);
     } on _isc.DeserializationTypeNotFoundException catch (_) {}
@@ -245,6 +260,7 @@ class Protocol extends _isc.SerializationManager {
       _imncc5ah.NormalizedIngredients => 'NormalizedIngredients',
       _imkhylta.PostComment => 'PostComment',
       _i2v49lle.PostLike => 'PostLike',
+      _ivtjxqnn.PostReport => 'PostReport',
       _ixmlxsuh.Recipe => 'Recipe',
       _isbyitoy.RecipeDetails => 'RecipeDetails',
       _i2urvore.RecipeIngredient => 'RecipeIngredient',
@@ -281,6 +297,8 @@ class Protocol extends _isc.SerializationManager {
         return 'PostComment';
       case _i2v49lle.PostLike():
         return 'PostLike';
+      case _ivtjxqnn.PostReport():
+        return 'PostReport';
       case _ixmlxsuh.Recipe():
         return 'Recipe';
       case _isbyitoy.RecipeDetails():
@@ -340,6 +358,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'PostLike') {
       return deserialize<_i2v49lle.PostLike>(data['data']);
+    }
+    if (dataClassName == 'PostReport') {
+      return deserialize<_ivtjxqnn.PostReport>(data['data']);
     }
     if (dataClassName == 'Recipe') {
       return deserialize<_ixmlxsuh.Recipe>(data['data']);

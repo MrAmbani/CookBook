@@ -28,6 +28,7 @@ import '../social/comment_endpoint.dart' as _i1kq3rxw;
 import '../social/follow_endpoint.dart' as _ilyau7si;
 import '../social/like_endpoint.dart' as _ispil1as;
 import '../social/post_endpoint.dart' as _itlceoes;
+import '../social/report_endpoint.dart' as _i5mkv7jo;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -109,6 +110,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'post',
+          null,
+        ),
+      'report': _i5mkv7jo.ReportEndpoint()
+        ..initialize(
+          server,
+          'report',
           null,
         ),
     };
@@ -814,6 +821,72 @@ class Endpoints extends _is.EndpointDispatch {
                   (endpoints['post'] as _itlceoes.PostEndpoint).deletePost(
                     session,
                     params['postId'],
+                  ),
+        ),
+      },
+    );
+    connectors['report'] = _is.EndpointConnector(
+      name: 'report',
+      endpoint: endpoints['report']!,
+      methodConnectors: {
+        'reportPost': _is.MethodConnector(
+          name: 'reportPost',
+          params: {
+            'postId': _is.ParameterDescription(
+              name: 'postId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'reason': _is.ParameterDescription(
+              name: 'reason',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['report'] as _i5mkv7jo.ReportEndpoint).reportPost(
+                    session,
+                    postId: params['postId'],
+                    reason: params['reason'],
+                  ),
+        ),
+        'listPending': _is.MethodConnector(
+          name: 'listPending',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['report'] as _i5mkv7jo.ReportEndpoint)
+                  .listPending(session),
+        ),
+        'resolve': _is.MethodConnector(
+          name: 'resolve',
+          params: {
+            'reportId': _is.ParameterDescription(
+              name: 'reportId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'action': _is.ParameterDescription(
+              name: 'action',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['report'] as _i5mkv7jo.ReportEndpoint).resolve(
+                    session,
+                    reportId: params['reportId'],
+                    action: params['action'],
                   ),
         ),
       },

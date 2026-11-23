@@ -32,7 +32,7 @@ class _FeedScreenState extends State<FeedScreen> {
       if (!mounted) return;
       setState(() => _me = me);
     } catch (_) {
-      // Guest: no delete buttons, likes ask to log in.
+      // Guest: no delete or report buttons, likes ask to log in.
     }
   }
 
@@ -48,7 +48,7 @@ class _FeedScreenState extends State<FeedScreen> {
         _hasMore = page.length == _pageSize;
       });
     } catch (e) {
-      _showError('Could not load feed: $e');
+      _showMessage('Could not load feed: $e');
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -64,13 +64,13 @@ class _FeedScreenState extends State<FeedScreen> {
         _hasMore = page.length == _pageSize;
       });
     } catch (e) {
-      _showError('Could not load more: $e');
+      _showMessage('Could not load more: $e');
     }
   }
 
   Future<void> _toggleLike(FeedItem item) async {
     if (_me == null) {
-      _showError('Log in to like posts');
+      _showMessage('Log in to like posts');
       return;
     }
     try {
@@ -81,7 +81,7 @@ class _FeedScreenState extends State<FeedScreen> {
         item.likeCount += liked ? 1 : -1;
       });
     } catch (e) {
-      _showError('Could not update like: $e');
+      _showMessage('Could not update like: $e');
     }
   }
 
@@ -119,11 +119,40 @@ class _FeedScreenState extends State<FeedScreen> {
       if (!mounted) return;
       setState(() => _items.remove(item));
     } catch (e) {
-      _showError('Could not delete: $e');
+      _showMessage('Could not delete: $e');
     }
   }
 
-  void _showError(String message) {
+  Future<void> _report(FeedItem item) async {
+    final reason = await showDialog<String>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text('Report this post'),
+        children: [
+          for (final r in const [
+            'Spam',
+            'Offensive or abusive',
+            'Misleading',
+            'Other',
+          ])
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, r),
+              child: Text(r),
+            ),
+        ],
+      ),
+    );
+    if (reason == null) return;
+
+    try {
+      await client.report.reportPost(postId: item.post.id!, reason: reason);
+      _showMessage('Report submitted. Thank you.');
+    } catch (e) {
+      _showMessage('Could not report: $e');
+    }
+  }
+
+  void _showMessage(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
@@ -131,6 +160,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
   bool _canDelete(SocialPost post) =>
       _me != null && (_me!.userId == post.userId || _me!.role == 'admin');
+
+  bool _canReport(SocialPost post) => _me != null && _me!.userId != post.userId;
 
   @override
   Widget build(BuildContext context) {
@@ -197,6 +228,11 @@ class _FeedScreenState extends State<FeedScreen> {
                                         ),
                                       ),
                                     ),
+                                    if (_canReport(post))
+                                      IconButton(
+                                        icon: const Icon(Icons.flag_outlined),
+                                        onPressed: () => _report(item),
+                                      ),
                                     if (_canDelete(post))
                                       IconButton(
                                         icon: const Icon(Icons.delete_outline),
