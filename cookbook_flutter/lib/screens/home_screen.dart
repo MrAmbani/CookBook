@@ -5,11 +5,13 @@ import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart'
 import '../client.dart';
 import 'sign_in_screen.dart';
 import 'ingredient_input_screen.dart';
+import 'scan_screen.dart';
 import 'search_screen.dart';
 import 'saved_recipes_screen.dart';
 import 'feed_screen.dart';
 import 'user_profile_screen.dart';
 import 'admin_screen.dart';
+import 'my_recipes_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -149,11 +151,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 16),
                 _menuButton(Icons.kitchen, 'Find Recipes',
                     () => const IngredientInputScreen()),
+                _menuButton(Icons.camera_alt, 'Scan Ingredients',
+                    () => const ScanScreen()),
                 _menuButton(
                     Icons.search, 'Search Recipes', () => const SearchScreen()),
                 _menuButton(Icons.bookmark, 'Saved Recipes',
                     () => const SavedRecipesScreen()),
                 _menuButton(Icons.forum, 'Community', () => const FeedScreen()),
+                if (role == 'chef' || role == 'admin')
+                  _menuButton(Icons.restaurant_menu, 'My Recipes',
+                      () => const MyRecipesScreen()),
                 if (role == 'admin')
                   _menuButton(Icons.admin_panel_settings, 'Admin Panel',
                       () => const AdminScreen()),

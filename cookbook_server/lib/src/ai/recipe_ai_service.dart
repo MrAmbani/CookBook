@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:serverpod/serverpod.dart';
-
-const String _geminiModel = 'gemini-3.8-flash';
+import 'gemini_client.dart';
 
 class GeneratedRecipeData {
   final String title;
@@ -28,18 +26,11 @@ class GeneratedRecipeData {
 
 class RecipeAiService {
   /// Calls Gemini to generate a recipe from the given ingredients.
-  /// Retries with a growing delay on temporary errors (429, 5xx).
-  /// Returns null if all attempts fail.
+  /// Returns null if no model answered or the answer was unusable twice.
   static Future<GeneratedRecipeData?> generate(
     Session session,
     List<String> ingredients,
   ) async {
-    final apiKey = session.passwords['geminiApiKey'];
-    if (apiKey == null) {
-      session.log('Gemini API key not configured.', level: LogLevel.warning);
-      return null;
-    }
-
     final prompt =
         '''
 Create a simple recipe using mainly these ingredients: ${ingredients.join(', ')}.
@@ -57,56 +48,27 @@ Respond with ONLY valid JSON, no markdown, no extra text, in this exact shape:
 }
 ''';
 
-    const maxAttempts = 3;
+    final request = {
+      'contents': [
+        {
+          'parts': [
+            {'text': prompt},
+          ],
+        },
+      ],
+    };
 
-    for (var attempt = 0; attempt < maxAttempts; attempt++) {
-      // Wait before retrying: 2s, then 4s.
-      if (attempt > 0) {
-        await Future.delayed(Duration(seconds: 2 * attempt));
-      }
+    for (var attempt = 0; attempt < 2; attempt++) {
+      final text = await GeminiClient.generateText(session, request);
+      if (text == null) return null; // every model failed
 
       try {
-        final response = await http
-            .post(
-              Uri.parse(
-                'https://generativelanguage.googleapis.com/v1beta/models/$_geminiModel:generateContent?key=$apiKey',
-              ),
-              headers: {'Content-Type': 'application/json'},
-              body: jsonEncode({
-                'contents': [
-                  {
-                    'parts': [
-                      {'text': prompt},
-                    ],
-                  },
-                ],
-              }),
-            )
-            .timeout(const Duration(seconds: 30));
-
-        if (response.statusCode != 200) {
-          session.log(
-            'Gemini API error (attempt ${attempt + 1}): '
-            '${response.statusCode} ${response.body}',
-            level: LogLevel.warning,
-          );
-          final temporary =
-              response.statusCode == 429 || response.statusCode >= 500;
-          if (temporary) continue; // retry after the delay
-          return null; // wrong key/model etc: retrying won't help
+        var json = text.trim();
+        if (json.startsWith('```')) {
+          json = json.replaceAll(RegExp(r'^```json|^```|```$'), '').trim();
         }
 
-        final body = jsonDecode(response.body);
-        var text =
-            body['candidates'][0]['content']['parts'][0]['text'] as String;
-
-        // Strip markdown code fences if the model added them anyway.
-        text = text.trim();
-        if (text.startsWith('```')) {
-          text = text.replaceAll(RegExp(r'^```json|^```|```$'), '').trim();
-        }
-
-        final parsed = jsonDecode(text);
+        final parsed = jsonDecode(json);
 
         // Validate required fields and basic sanity.
         if (parsed['title'] == null ||
@@ -115,7 +77,7 @@ Respond with ONLY valid JSON, no markdown, no extra text, in this exact shape:
             parsed['ingredients'] == null ||
             (parsed['ingredients'] as List).isEmpty) {
           session.log(
-            'Gemini response failed validation (attempt ${attempt + 1})',
+            'Recipe response failed validation (attempt ${attempt + 1})',
             level: LogLevel.warning,
           );
           continue;
@@ -133,12 +95,12 @@ Respond with ONLY valid JSON, no markdown, no extra text, in this exact shape:
         );
       } catch (e) {
         session.log(
-          'Gemini call failed (attempt ${attempt + 1}): $e',
+          'Could not read recipe response (attempt ${attempt + 1}): $e',
           level: LogLevel.warning,
         );
       }
     }
 
-    return null; // all attempts failed
+    return null;
   }
 }

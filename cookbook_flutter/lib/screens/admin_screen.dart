@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cookbook_client/cookbook_client.dart';
 import '../client.dart';
+import 'user_management_screen.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -73,7 +74,19 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pending Reports')),
+      appBar: AppBar(
+        title: const Text('Pending Reports'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.people),
+            tooltip: 'Manage users',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const UserManagementScreen()),
+            ),
+          ),
+        ],
+      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(

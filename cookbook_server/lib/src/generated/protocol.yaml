@@ -1,4 +1,7 @@
+scan:
+  - scanIngredients:
 admin:
+  - listUsers:
   - setUserRole:
 emailIdp:
   - login:
@@ -16,6 +19,11 @@ profile:
   - updateProfile:
 greeting:
   - hello:
+chefRecipe:
+  - createRecipe:
+  - updateRecipe:
+  - myRecipes:
+  - deleteRecipe:
 ingredient:
   - normalize:
 recipe:

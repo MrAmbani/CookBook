@@ -10,16 +10,21 @@
 // ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:typed_data' as _idt;
+import 'package:cookbook_server/src/generated/new_recipe_ingredient.dart'
+    as _iozmqfff;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
+import '../ai/scan_endpoint.dart' as _ioaqba8e;
 import '../auth/admin_endpoint.dart' as _i8v010p0;
 import '../auth/email_idp_endpoint.dart' as _iuc1hd5t;
 import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
 import '../auth/profile_endpoint.dart' as _icd61av3;
 import '../greetings/greeting_endpoint.dart' as _il624ik7;
+import '../recipies/chef_recipe_endpoint.dart' as _iijwy1m4;
 import '../recipies/ingredient_endpoint.dart' as _ibftvyt1;
 import '../recipies/recipe_endpoint.dart' as _i08c4iss;
 import '../recipies/recipe_search_endpoint.dart' as _ie98sf55;
@@ -34,6 +39,12 @@ class Endpoints extends _is.EndpointDispatch {
   @override
   void initializeEndpoints(_is.Server server) {
     var endpoints = <String, _is.Endpoint>{
+      'scan': _ioaqba8e.ScanEndpoint()
+        ..initialize(
+          server,
+          'scan',
+          null,
+        ),
       'admin': _i8v010p0.AdminEndpoint()
         ..initialize(
           server,
@@ -62,6 +73,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'greeting',
+          null,
+        ),
+      'chefRecipe': _iijwy1m4.ChefRecipeEndpoint()
+        ..initialize(
+          server,
+          'chefRecipe',
           null,
         ),
       'ingredient': _ibftvyt1.IngredientEndpoint()
@@ -119,10 +136,45 @@ class Endpoints extends _is.EndpointDispatch {
           null,
         ),
     };
+    connectors['scan'] = _is.EndpointConnector(
+      name: 'scan',
+      endpoint: endpoints['scan']!,
+      methodConnectors: {
+        'scanIngredients': _is.MethodConnector(
+          name: 'scanIngredients',
+          params: {
+            'image': _is.ParameterDescription(
+              name: 'image',
+              type: _is.getType<_idt.ByteData>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['scan'] as _ioaqba8e.ScanEndpoint).scanIngredients(
+                    session,
+                    params['image'],
+                  ),
+        ),
+      },
+    );
     connectors['admin'] = _is.EndpointConnector(
       name: 'admin',
       endpoint: endpoints['admin']!,
       methodConnectors: {
+        'listUsers': _is.MethodConnector(
+          name: 'listUsers',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['admin'] as _i8v010p0.AdminEndpoint)
+                  .listUsers(session),
+        ),
         'setUserRole': _is.MethodConnector(
           name: 'setUserRole',
           params: {
@@ -419,6 +471,173 @@ class Endpoints extends _is.EndpointDispatch {
                     session,
                     params['name'],
                   ),
+        ),
+      },
+    );
+    connectors['chefRecipe'] = _is.EndpointConnector(
+      name: 'chefRecipe',
+      endpoint: endpoints['chefRecipe']!,
+      methodConnectors: {
+        'createRecipe': _is.MethodConnector(
+          name: 'createRecipe',
+          params: {
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'steps': _is.ParameterDescription(
+              name: 'steps',
+              type: _is.getType<List<String>>(),
+              nullable: false,
+            ),
+            'prepTime': _is.ParameterDescription(
+              name: 'prepTime',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'cookTime': _is.ParameterDescription(
+              name: 'cookTime',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'servings': _is.ParameterDescription(
+              name: 'servings',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'difficulty': _is.ParameterDescription(
+              name: 'difficulty',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'ingredients': _is.ParameterDescription(
+              name: 'ingredients',
+              type: _is.getType<List<_iozmqfff.NewRecipeIngredient>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['chefRecipe'] as _iijwy1m4.ChefRecipeEndpoint)
+                      .createRecipe(
+                        session,
+                        title: params['title'],
+                        description: params['description'],
+                        steps: params['steps'],
+                        prepTime: params['prepTime'],
+                        cookTime: params['cookTime'],
+                        servings: params['servings'],
+                        difficulty: params['difficulty'],
+                        ingredients: params['ingredients'],
+                      ),
+        ),
+        'updateRecipe': _is.MethodConnector(
+          name: 'updateRecipe',
+          params: {
+            'recipeId': _is.ParameterDescription(
+              name: 'recipeId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'title': _is.ParameterDescription(
+              name: 'title',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'steps': _is.ParameterDescription(
+              name: 'steps',
+              type: _is.getType<List<String>>(),
+              nullable: false,
+            ),
+            'prepTime': _is.ParameterDescription(
+              name: 'prepTime',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'cookTime': _is.ParameterDescription(
+              name: 'cookTime',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'servings': _is.ParameterDescription(
+              name: 'servings',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'difficulty': _is.ParameterDescription(
+              name: 'difficulty',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'ingredients': _is.ParameterDescription(
+              name: 'ingredients',
+              type: _is.getType<List<_iozmqfff.NewRecipeIngredient>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['chefRecipe'] as _iijwy1m4.ChefRecipeEndpoint)
+                      .updateRecipe(
+                        session,
+                        recipeId: params['recipeId'],
+                        title: params['title'],
+                        description: params['description'],
+                        steps: params['steps'],
+                        prepTime: params['prepTime'],
+                        cookTime: params['cookTime'],
+                        servings: params['servings'],
+                        difficulty: params['difficulty'],
+                        ingredients: params['ingredients'],
+                      ),
+        ),
+        'myRecipes': _is.MethodConnector(
+          name: 'myRecipes',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['chefRecipe'] as _iijwy1m4.ChefRecipeEndpoint)
+                      .myRecipes(session),
+        ),
+        'deleteRecipe': _is.MethodConnector(
+          name: 'deleteRecipe',
+          params: {
+            'recipeId': _is.ParameterDescription(
+              name: 'recipeId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['chefRecipe'] as _iijwy1m4.ChefRecipeEndpoint)
+                      .deleteRecipe(
+                        session,
+                        params['recipeId'],
+                      ),
         ),
       },
     );

@@ -11,9 +11,12 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _ida;
+import 'dart:typed_data' as _idt;
 import 'package:cookbook_client/src/protocol/feed_item.dart' as _ifq0pwto;
 import 'package:cookbook_client/src/protocol/greetings/greeting.dart'
     as _ipvxrsk2;
+import 'package:cookbook_client/src/protocol/new_recipe_ingredient.dart'
+    as _it0lj8o7;
 import 'package:cookbook_client/src/protocol/normalized_ingredients.dart'
     as _iqjhkawc;
 import 'package:cookbook_client/src/protocol/post_comment.dart' as _itl7hg3m;
@@ -33,13 +36,38 @@ import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'protocol.dart' as _il2as5qe;
 
 /// {@category Endpoint}
+class EndpointScan extends _isc.EndpointRef {
+  EndpointScan(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'scan';
+
+  /// Logged-in users only. Returns the ingredient names seen in the photo,
+  /// or null if the AI service is unavailable.
+  _ida.Future<List<String>?> scanIngredients(_idt.ByteData image) =>
+      caller.callServerEndpoint<List<String>?>(
+        'scan',
+        'scanIngredients',
+        {'image': image},
+      );
+}
+
+/// {@category Endpoint}
 class EndpointAdmin extends _isc.EndpointRef {
   EndpointAdmin(_isc.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'admin';
 
-  /// Changes another user's role. Caller must already be an admin.
+  /// Admin only. Everyone who has a profile, ordered by name.
+  _ida.Future<List<_itv3alm3.UserProfile>> listUsers() =>
+      caller.callServerEndpoint<List<_itv3alm3.UserProfile>>(
+        'admin',
+        'listUsers',
+        {},
+      );
+
+  /// Admin only. Changes another user's role.
   _ida.Future<_itv3alm3.UserProfile> setUserRole({
     required String targetUserId,
     required String newRole,
@@ -324,6 +352,84 @@ class EndpointGreeting extends _isc.EndpointRef {
         'greeting',
         'hello',
         {'name': name},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointChefRecipe extends _isc.EndpointRef {
+  EndpointChefRecipe(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'chefRecipe';
+
+  /// Chef or admin only.
+  _ida.Future<_ipe9xyte.Recipe> createRecipe({
+    required String title,
+    required String description,
+    required List<String> steps,
+    required int prepTime,
+    required int cookTime,
+    required int servings,
+    required String difficulty,
+    required List<_it0lj8o7.NewRecipeIngredient> ingredients,
+  }) => caller.callServerEndpoint<_ipe9xyte.Recipe>(
+    'chefRecipe',
+    'createRecipe',
+    {
+      'title': title,
+      'description': description,
+      'steps': steps,
+      'prepTime': prepTime,
+      'cookTime': cookTime,
+      'servings': servings,
+      'difficulty': difficulty,
+      'ingredients': ingredients,
+    },
+  );
+
+  /// Owner or admin only. Replaces the recipe's fields and its whole
+  /// ingredient list with the new values.
+  _ida.Future<_ipe9xyte.Recipe> updateRecipe({
+    required int recipeId,
+    required String title,
+    required String description,
+    required List<String> steps,
+    required int prepTime,
+    required int cookTime,
+    required int servings,
+    required String difficulty,
+    required List<_it0lj8o7.NewRecipeIngredient> ingredients,
+  }) => caller.callServerEndpoint<_ipe9xyte.Recipe>(
+    'chefRecipe',
+    'updateRecipe',
+    {
+      'recipeId': recipeId,
+      'title': title,
+      'description': description,
+      'steps': steps,
+      'prepTime': prepTime,
+      'cookTime': cookTime,
+      'servings': servings,
+      'difficulty': difficulty,
+      'ingredients': ingredients,
+    },
+  );
+
+  /// Chef or admin only. The caller's own hand-written recipes, newest first.
+  _ida.Future<List<_ipe9xyte.Recipe>> myRecipes() =>
+      caller.callServerEndpoint<List<_ipe9xyte.Recipe>>(
+        'chefRecipe',
+        'myRecipes',
+        {},
+      );
+
+  /// Owner or admin only. Also removes the recipe's ingredient links and
+  /// every user's bookmark of it, so nothing is left pointing at a deleted row.
+  _ida.Future<void> deleteRecipe(int recipeId) =>
+      caller.callServerEndpoint<void>(
+        'chefRecipe',
+        'deleteRecipe',
+        {'recipeId': recipeId},
       );
 }
 
@@ -629,11 +735,13 @@ class Client extends _isc.ServerpodClientShared {
              disconnectStreamsOnLostInternetConnection,
          httpClientOverride: httpClientOverride,
        ) {
+    scan = EndpointScan(this);
     admin = EndpointAdmin(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     profile = EndpointProfile(this);
     greeting = EndpointGreeting(this);
+    chefRecipe = EndpointChefRecipe(this);
     ingredient = EndpointIngredient(this);
     recipe = EndpointRecipe(this);
     recipeSearch = EndpointRecipeSearch(this);
@@ -646,6 +754,8 @@ class Client extends _isc.ServerpodClientShared {
     modules = Modules(this);
   }
 
+  late final EndpointScan scan;
+
   late final EndpointAdmin admin;
 
   late final EndpointEmailIdp emailIdp;
@@ -655,6 +765,8 @@ class Client extends _isc.ServerpodClientShared {
   late final EndpointProfile profile;
 
   late final EndpointGreeting greeting;
+
+  late final EndpointChefRecipe chefRecipe;
 
   late final EndpointIngredient ingredient;
 
@@ -678,11 +790,13 @@ class Client extends _isc.ServerpodClientShared {
 
   @override
   Map<String, _isc.EndpointRef> get endpointRefLookup => {
+    'scan': scan,
     'admin': admin,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
     'profile': profile,
     'greeting': greeting,
+    'chefRecipe': chefRecipe,
     'ingredient': ingredient,
     'recipe': recipe,
     'recipeSearch': recipeSearch,

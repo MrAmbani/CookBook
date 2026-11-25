@@ -12,10 +12,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:cookbook_client/src/protocol/feed_item.dart' as _ifq0pwto;
+import 'package:cookbook_client/src/protocol/new_recipe_ingredient.dart'
+    as _it0lj8o7;
 import 'package:cookbook_client/src/protocol/post_comment.dart' as _itl7hg3m;
 import 'package:cookbook_client/src/protocol/post_report.dart' as _inkmoqde;
 import 'package:cookbook_client/src/protocol/recipe.dart' as _ipe9xyte;
 import 'package:cookbook_client/src/protocol/recipe_match.dart' as _ix9qtf7i;
+import 'package:cookbook_client/src/protocol/user_profile.dart' as _itv3alm3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
@@ -24,6 +27,7 @@ import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'feed_item.dart' as _ionihcdq;
 import 'greetings/greeting.dart' as _izw8z7ou;
 import 'ingrediants.dart' as _i9otnek0;
+import 'new_recipe_ingredient.dart' as _iag6z63r;
 import 'normalized_ingredients.dart' as _imncc5ah;
 import 'post_comment.dart' as _imkhylta;
 import 'post_like.dart' as _i2v49lle;
@@ -41,6 +45,7 @@ import 'user_summary.dart' as _izljl0an;
 export 'feed_item.dart';
 export 'greetings/greeting.dart';
 export 'ingrediants.dart';
+export 'new_recipe_ingredient.dart';
 export 'normalized_ingredients.dart';
 export 'post_comment.dart';
 export 'post_like.dart';
@@ -100,6 +105,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _i9otnek0.Ingredient) {
       return _i9otnek0.Ingredient.fromJson(data) as T;
     }
+    if (t == _iag6z63r.NewRecipeIngredient) {
+      return _iag6z63r.NewRecipeIngredient.fromJson(data) as T;
+    }
     if (t == _imncc5ah.NormalizedIngredients) {
       return _imncc5ah.NormalizedIngredients.fromJson(data) as T;
     }
@@ -150,6 +158,12 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _isc.getType<_i9otnek0.Ingredient?>()) {
       return (data != null ? _i9otnek0.Ingredient.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_iag6z63r.NewRecipeIngredient?>()) {
+      return (data != null
+              ? _iag6z63r.NewRecipeIngredient.fromJson(data)
+              : null)
+          as T;
     }
     if (t == _isc.getType<_imncc5ah.NormalizedIngredients?>()) {
       return (data != null
@@ -213,15 +227,33 @@ class Protocol extends _isc.SerializationManager {
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
-    if (t == List<_ix9qtf7i.RecipeMatch>) {
+    if (t == _isc.getType<List<String>?>()) {
+      return (data != null
+              ? (data as List).map((e) => deserialize<String>(e)).toList()
+              : null)
+          as T;
+    }
+    if (t == List<_itv3alm3.UserProfile>) {
       return (data as List)
-              .map((e) => deserialize<_ix9qtf7i.RecipeMatch>(e))
+              .map((e) => deserialize<_itv3alm3.UserProfile>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_it0lj8o7.NewRecipeIngredient>) {
+      return (data as List)
+              .map((e) => deserialize<_it0lj8o7.NewRecipeIngredient>(e))
               .toList()
           as T;
     }
     if (t == List<_ipe9xyte.Recipe>) {
       return (data as List)
               .map((e) => deserialize<_ipe9xyte.Recipe>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ix9qtf7i.RecipeMatch>) {
+      return (data as List)
+              .map((e) => deserialize<_ix9qtf7i.RecipeMatch>(e))
               .toList()
           as T;
     }
@@ -257,6 +289,7 @@ class Protocol extends _isc.SerializationManager {
       _ionihcdq.FeedItem => 'FeedItem',
       _izw8z7ou.Greeting => 'Greeting',
       _i9otnek0.Ingredient => 'Ingredient',
+      _iag6z63r.NewRecipeIngredient => 'NewRecipeIngredient',
       _imncc5ah.NormalizedIngredients => 'NormalizedIngredients',
       _imkhylta.PostComment => 'PostComment',
       _i2v49lle.PostLike => 'PostLike',
@@ -291,6 +324,8 @@ class Protocol extends _isc.SerializationManager {
         return 'Greeting';
       case _i9otnek0.Ingredient():
         return 'Ingredient';
+      case _iag6z63r.NewRecipeIngredient():
+        return 'NewRecipeIngredient';
       case _imncc5ah.NormalizedIngredients():
         return 'NormalizedIngredients';
       case _imkhylta.PostComment():
@@ -349,6 +384,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'Ingredient') {
       return deserialize<_i9otnek0.Ingredient>(data['data']);
+    }
+    if (dataClassName == 'NewRecipeIngredient') {
+      return deserialize<_iag6z63r.NewRecipeIngredient>(data['data']);
     }
     if (dataClassName == 'NormalizedIngredients') {
       return deserialize<_imncc5ah.NormalizedIngredients>(data['data']);
